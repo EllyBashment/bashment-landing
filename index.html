@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bashment — Find Your Night</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            void: '#050508',
+            ink: '#0d0d18',
+            cave: '#11111f',
+            panel: '#16162a',
+            rim: '#1e1e38',
+            neon: '#c8ff00',
+            pulse: '#9b5cff',
+            ember: '#ff4d6d',
+            mist: '#8888aa',
+            ghost: '#ccccee',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'slide-up': 'slideUp 0.7s ease forwards',
+            'fade-in': 'fadeIn 0.8s ease forwards',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-16px)' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 20px rgba(200,255,0,0.3)' },
+              '100%': { boxShadow: '0 0 40px rgba(200,255,0,0.7), 0 0 80px rgba(200,255,0,0.2)' },
+            },
+            slideUp: {
+              from: { opacity: '0', transform: 'translateY(40px)' },
+              to: { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              from: { opacity: '0' },
+              to: { opacity: '1' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #050508; color: #ccccee; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #050508; }
+    ::-webkit-scrollbar-thumb { background: #c8ff00; border-radius: 2px; }
+
+    /* Gradient mesh background */
+    .mesh-bg {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(155, 92, 255, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(200, 255, 0, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 60% at 50% 80%, rgba(255, 77, 109, 0.12) 0%, transparent 50%),
+        #050508;
+    }
+
+    /* Animated orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    /* Glow button */
+    .btn-neon {
+      background: #c8ff00;
+      color: #050508;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(200,255,0,0.3);
+    }
+    .btn-neon:hover {
+      box-shadow: 0 0 40px rgba(200,255,0,0.7), 0 0 80px rgba(200,255,0,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Ghost button */
+    .btn-ghost {
+      border: 1px solid rgba(200,255,0,0.3);
+      color: #c8ff00;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-ghost:hover {
+      background: rgba(200,255,0,0.1);
+      border-color: rgba(200,255,0,0.7);
+    }
+
+    /* Feature cards */
+    .feature-card {
+      background: linear-gradient(135deg, rgba(22,22,42,0.9) 0%, rgba(17,17,31,0.9) 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .feature-card:hover {
+      border-color: rgba(200,255,0,0.2);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(200,255,0,0.05);
+    }
+    .feature-card:hover::before { opacity: 1; }
+
+    /* Step connector line */
+    .step-line {
+      position: absolute;
+      top: 28px;
+      left: calc(50% + 28px);
+      right: calc(-50% + 28px);
+      height: 1px;
+      background: linear-gradient(90deg, rgba(200,255,0,0.4), rgba(155,92,255,0.2));
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* Nav blur */
+    .nav-blur {
+      background: rgba(5,5,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* Input styles */
+    .email-input {
+      background: rgba(22,22,42,0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #ccccee;
+      transition: all 0.3s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .email-input:focus {
+      outline: none;
+      border-color: rgba(200,255,0,0.5);
+      box-shadow: 0 0 20px rgba(200,255,0,0.1);
+    }
+    .email-input::placeholder { color: #8888aa; }
+
+    /* Vibe section */
+    .vibe-tag {
+      background: rgba(22,22,42,0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.3s ease;
+    }
+    .vibe-tag:hover {
+      border-color: rgba(200,255,0,0.3);
+      background: rgba(200,255,0,0.06);
+    }
+
+    /* Ticker */
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Logo mark */
+    .logo-b {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+
+    /* Social proof card */
+    .proof-card {
+      background: linear-gradient(135deg, rgba(22,22,42,0.95) 0%, rgba(17,17,31,0.95) 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.4s ease;
+    }
+    .proof-card:hover {
+      border-color: rgba(200,255,0,0.15);
+      transform: scale(1.02);
+    }
+
+    /* Mobile menu */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+  </style>
+</head>
+<body class="mesh-bg">
+
+  <!-- NAV -->
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="logo-b text-ghost">
+        BASH<span class="text-neon">MENT</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-mist hover:text-ghost text-sm transition-colors font-body">Features</a>
+        <a href="#heatmap" class="text-mist hover:text-ghost text-sm transition-colors font-body">Map</a>
+        <a href="#vibecheck" class="text-mist hover:text-ghost text-sm transition-colors font-body">Vibe Check</a>
+        <a href="#how" class="text-mist hover:text-ghost text-sm transition-colors font-body">How It Works</a>
+        <a href="#signup" class="btn-neon px-5 py-2 rounded-full text-sm">Join Waitlist</a>
+      </div>
+      <button id="hamburger" class="md:hidden text-ghost" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="flex-col px-6 pb-6 gap-4 border-t border-white border-opacity-5">
+      <a href="#features" class="text-mist hover:text-ghost text-sm py-2">Features</a>
+      <a href="#how" class="text-mist hover:text-ghost text-sm py-2">How It Works</a>
+      <a href="#vibe" class="text-mist hover:text-ghost text-sm py-2">Vibe</a>
+      <a href="#signup" class="btn-neon px-5 py-3 rounded-full text-sm text-center">Join Waitlist</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-20 overflow-hidden">
+    <!-- Orbs -->
+    <div class="orb w-96 h-96 bg-pulse opacity-20" style="top:-80px;left:-100px;animation-delay:0s;"></div>
+    <div class="orb w-72 h-72 bg-neon opacity-10" style="top:60px;right:-80px;animation-delay:2s;"></div>
+    <div class="orb w-64 h-64 bg-ember opacity-15" style="bottom:40px;left:10%;animation-delay:4s;"></div>
+
+    <!-- Badge -->
+    <div class="reveal inline-flex items-center gap-2 bg-white bg-opacity-5 border border-white border-opacity-10 rounded-full px-4 py-2 mb-8">
+      <span class="w-2 h-2 rounded-full bg-neon animate-pulse-slow"></span>
+      <span class="text-xs font-body text-ghost tracking-widest uppercase">Early Access — Limited Spots</span>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="reveal reveal-delay-1 font-display font-800 text-5xl md:text-7xl lg:text-8xl leading-none tracking-tight mb-6 max-w-5xl">
+      <span class="text-ghost">Your City's</span><br/>
+      <span class="text-neon">Night Life,</span><br/>
+      <span class="text-ghost">Unlocked.</span>
+    </h1>
+
+    <!-- Sub -->
+    <p class="reveal reveal-delay-2 font-body text-mist text-lg md:text-xl max-w-xl leading-relaxed mb-10">
+      Discover the best events, parties, and experiences near you — before anyone else does.
+      Bashment puts the pulse of your city in your pocket.
+    </p>
+
+    <!-- CTAs -->
+    <div class="reveal reveal-delay-3 flex flex-col sm:flex-row items-center gap-4">
+      <a href="#signup" class="btn-neon px-8 py-4 rounded-full text-base font-display">
+        Join the Waitlist →
+      </a>
+      <a href="#how" class="btn-ghost px-8 py-4 rounded-full text-base">
+        See How It Works
+      </a>
+    </div>
+
+    <!-- App mockup -->
+    <div class="reveal reveal-delay-4 relative mt-20 animate-float max-w-xs mx-auto">
+      <div class="relative w-64 h-auto mx-auto">
+        <!-- Phone frame -->
+        <div style="width:260px;height:520px;background:linear-gradient(145deg,#1e1e38,#11111f);border-radius:40px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 40px 120px rgba(0,0,0,0.8),0 0 60px rgba(155,92,255,0.2);position:relative;overflow:hidden;">
+          <!-- Notch -->
+          <div style="width:80px;height:24px;background:#050508;border-radius:0 0 16px 16px;margin:0 auto;position:relative;z-index:2;"></div>
+          <!-- Screen content -->
+          <div style="padding:16px;padding-top:8px;">
+            <div style="font-family:Syne,sans-serif;font-size:12px;color:#8888aa;margin-bottom:12px;">📍 Brooklyn, NY</div>
+            <div style="font-family:Syne,sans-serif;font-size:18px;font-weight:800;color:#ccccee;margin-bottom:4px;">Tonight's Picks 🔥</div>
+            <!-- Event cards -->
+            <div style="background:linear-gradient(135deg,rgba(155,92,255,0.3),rgba(155,92,255,0.1));border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(155,92,255,0.3);">
+              <div style="font-size:10px;color:#c8ff00;font-family:DM Sans,sans-serif;margin-bottom:4px;">TECHNO · 11PM</div>
+              <div style="font-size:13px;font-weight:700;color:#ccccee;font-family:Syne,sans-serif;">Fabric Presents: RBMA</div>
+              <div style="font-size:10px;color:#8888aa;font-family:DM Sans,sans-serif;margin-top:4px;">Output · 0.3mi away</div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,77,109,0.2),rgba(255,77,109,0.05));border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,77,109,0.2);">
+              <div style="font-size:10px;color:#ff4d6d;font-family:DM Sans,sans-serif;margin-bottom:4px;">HOUSE · 10PM</div>
+              <div style="font-size:13px;font-weight:700;color:#ccccee;font-family:Syne,sans-serif;">Club Soma: Deep Sessions</div>
+              <div style="font-size:10px;color:#8888aa;font-family:DM Sans,sans-serif;margin-top:4px;">Elsewhere · 0.8mi away</div>
+            </div>
+            <div style="background:rgba(22,22,42,0.9);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:10px;color:#c8ff00;font-family:DM Sans,sans-serif;margin-bottom:4px;">AFROBEATS · 9PM</div>
+              <div style="font-size:13px;font-weight:700;color:#ccccee;font-family:Syne,sans-serif;">African Night: NYC Edition</div>
+              <div style="font-size:10px;color:#8888aa;font-family:DM Sans,sans-serif;margin-top:4px;">SOB's · 1.2mi away</div>
+            </div>
+            <!-- Bottom nav -->
+            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(11,11,20,0.95);padding:12px 20px;display:flex;justify-content:space-around;border-top:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:18px;">🏠</span>
+              <span style="font-size:18px;">🗺️</span>
+              <span style="font-size:18px; filter:drop-shadow(0 0 6px #c8ff00);">⚡</span>
+              <span style="font-size:18px;">👤</span>
+            </div>
+          </div>
+        </div>
+        <!-- Glow under phone -->
+        <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:150px;height:40px;background:rgba(155,92,255,0.4);filter:blur(30px);border-radius:50%;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="overflow-hidden border-y border-white border-opacity-5 py-4 bg-panel bg-opacity-30">
+    <div class="ticker-track">
+      <span class="text-mist text-sm font-body px-8">🎵 Techno</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🥁 Afrobeats</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎷 Jazz Nights</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎤 Hip-Hop</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎸 Live Bands</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🕺 House Music</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎆 Rooftop Parties</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🌙 Midnight Raves</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="text-mist text-sm font-body px-8">🎵 Techno</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🥁 Afrobeats</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎷 Jazz Nights</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎤 Hip-Hop</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎸 Live Bands</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🕺 House Music</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🎆 Rooftop Parties</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+      <span class="text-mist text-sm font-body px-8">🌙 Midnight Raves</span>
+      <span class="text-neon font-display font-700 px-4">·</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-28 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <div class="inline-block bg-neon bg-opacity-10 border border-neon border-opacity-20 rounded-full px-4 py-1 text-neon text-xs font-display tracking-widest uppercase mb-4">Features</div>
+      <h2 class="font-display font-800 text-4xl md:text-5xl text-ghost tracking-tight mb-4">Everything You Need<br/><span class="text-neon">For the Night</span></h2>
+      <p class="text-mist font-body max-w-md mx-auto">Curated for those who don't just attend events — they live them.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <div class="feature-card rounded-3xl p-8 reveal">
+        <div class="w-12 h-12 rounded-2xl bg-pulse bg-opacity-20 flex items-center justify-center mb-6 text-2xl">⚡</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Real-Time Discovery</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">Events update live so you're always in the loop — whether it's tonight or next weekend, never miss a beat.</p>
+      </div>
+      <!-- Card 2 -->
+      <div class="feature-card rounded-3xl p-8 reveal reveal-delay-1">
+        <div class="w-12 h-12 rounded-2xl bg-neon bg-opacity-20 flex items-center justify-center mb-6 text-2xl">🎯</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Vibe Matching</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">Our AI learns your taste — techno head, jazz lover, or rooftop seeker — and serves up exactly your type of night.</p>
+      </div>
+      <!-- Card 3 -->
+      <div class="feature-card rounded-3xl p-8 reveal reveal-delay-2">
+        <div class="w-12 h-12 rounded-2xl bg-ember bg-opacity-20 flex items-center justify-center mb-6 text-2xl">🗺️</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Neighborhood Radar</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">Filter by distance, vibe, or venue type. See what's buzzing in your borough right now, down to the block.</p>
+      </div>
+      <!-- Card 4 -->
+      <div class="feature-card rounded-3xl p-8 reveal">
+        <div class="w-12 h-12 rounded-2xl bg-neon bg-opacity-20 flex items-center justify-center mb-6 text-2xl">⚡</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Vibe Score</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">A live 0–100 crowd score updated every minute from check-ins, capacity, reactions, and Vibe Checks. Never walk into a dead room again.</p>
+      </div>
+      <!-- Card 5 -->
+      <div class="feature-card rounded-3xl p-8 reveal reveal-delay-1">
+        <div class="w-12 h-12 rounded-2xl bg-ember bg-opacity-20 flex items-center justify-center mb-6 text-2xl">📹</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Vibe Check</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">Promoters and patrons post raw 10-second clips from inside the venue. No filters. See the actual crowd, hear the actual music — before you commit.</p>
+      </div>
+      <!-- Card 6 -->
+      <div class="feature-card rounded-3xl p-8 reveal reveal-delay-2">
+        <div class="w-12 h-12 rounded-2xl bg-pulse bg-opacity-20 flex items-center justify-center mb-6 text-2xl">🔒</div>
+        <h3 class="font-display font-700 text-ghost text-xl mb-3">Members-Only Access</h3>
+        <p class="font-body text-mist text-sm leading-relaxed">Unlock exclusive invite-only events, secret venues, and after-parties reserved only for Bashment members.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEAT MAP SECTION -->
+  <section id="heatmap" class="py-28 px-6 relative overflow-hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 70% 50%,rgba(200,255,0,0.05),transparent);pointer-events:none;"></div>
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: copy -->
+        <div class="reveal">
+          <div class="inline-block bg-neon bg-opacity-10 border border-neon border-opacity-20 rounded-full px-4 py-1 text-neon text-xs font-display tracking-widest uppercase mb-6">New City? No Problem.</div>
+          <h2 class="font-display font-800 text-4xl md:text-5xl text-ghost tracking-tight mb-6 leading-tight">See Where the<br/><span class="text-neon">Night Burns Hottest.</span></h2>
+          <p class="font-body text-mist text-lg leading-relaxed mb-8">Just landed in a new city? The Bashment Heat Map shows you exactly where nightlife concentrates — no recommendations needed, no local knowledge required. Red means the block is on fire. Blue means hidden gem.</p>
+          <div class="flex flex-col gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,40,60,0.15);border:1px solid rgba(255,40,60,0.3);">
+                <span style="font-size:16px;">🔴</span>
+              </div>
+              <div>
+                <div class="font-display font-600 text-ghost text-sm mb-1">Red Zones — Peak Energy</div>
+                <div class="font-body text-mist text-sm">Multiple events, maximum density. Go here if you want guaranteed atmosphere, no guesswork.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,180,0,0.15);border:1px solid rgba(255,180,0,0.3);">
+                <span style="font-size:16px;">🟡</span>
+              </div>
+              <div>
+                <div class="font-display font-600 text-ghost text-sm mb-1">Yellow Zones — Solid Nights</div>
+                <div class="font-body text-mist text-sm">Active scenes with breathing room. Great for a specific genre or a more curated experience.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,140,255,0.15);border:1px solid rgba(0,140,255,0.3);">
+                <span style="font-size:16px;">🔵</span>
+              </div>
+              <div>
+                <div class="font-display font-600 text-ghost text-sm mb-1">Blue Zones — Hidden Gems</div>
+                <div class="font-body text-mist text-sm">Low density but high reward. Secret bars, intimate shows, and the spots locals actually go.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: phone mockup with live canvas heat map -->
+        <div class="reveal reveal-delay-2 flex justify-center">
+          <div style="width:280px;position:relative;">
+            <!-- Phone shell -->
+            <div style="width:280px;height:560px;background:#0a0a14;border-radius:40px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 40px 120px rgba(0,0,0,0.8),0 0 60px rgba(200,255,0,0.08);overflow:hidden;position:relative;">
+              <!-- Status bar -->
+              <div style="padding:14px 20px 8px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;">
+                <span style="font-size:11px;color:#8888aa;font-family:sans-serif;">9:41 PM</span>
+                <div style="width:60px;height:20px;background:#0a0a14;border-radius:10px;"></div>
+                <span style="font-size:11px;color:#8888aa;font-family:sans-serif;">●●●</span>
+              </div>
+              <!-- Header -->
+              <div style="padding:4px 16px 10px;position:relative;z-index:10;">
+                <div style="font-size:10px;color:#8888aa;font-family:sans-serif;">📍 Williamsburg, Brooklyn</div>
+                <div style="font-size:16px;font-weight:700;color:#e8e8f0;font-family:sans-serif;margin-top:2px;">Nightlife Map</div>
+              </div>
+              <!-- Map canvas -->
+              <div style="position:relative;height:340px;">
+                <canvas id="hmMapCanvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+                <canvas id="hmHeatCanvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.78;"></canvas>
+                <!-- Pins -->
+                <div style="position:absolute;left:42%;top:28%;transform:translate(-50%,-50%);">
+                  <div style="width:32px;height:32px;background:#c8ff00;border-radius:50%;border:2px solid #050508;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 12px rgba(200,255,0,0.5);">🎵</div>
+                </div>
+                <div style="position:absolute;left:63%;top:42%;transform:translate(-50%,-50%);">
+                  <div style="width:32px;height:32px;background:#ff4d6d;border-radius:50%;border:2px solid #050508;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 12px rgba(255,77,109,0.5);">🥁</div>
+                </div>
+                <div style="position:absolute;left:28%;top:55%;transform:translate(-50%,-50%);">
+                  <div style="width:28px;height:28px;background:#9b5cff;border-radius:50%;border:2px solid #050508;display:flex;align-items:center;justify-content:center;font-size:11px;">🕺</div>
+                </div>
+                <div style="position:absolute;left:70%;top:22%;transform:translate(-50%,-50%);">
+                  <div style="width:24px;height:24px;background:rgba(0,180,255,0.8);border-radius:50%;border:1px solid rgba(0,180,255,0.5);display:flex;align-items:center;justify-content:center;font-size:10px;">🎷</div>
+                </div>
+                <!-- Legend -->
+                <div style="position:absolute;bottom:10px;left:10px;background:rgba(5,5,14,0.88);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:7px 10px;">
+                  <div style="font-size:9px;color:#8888aa;font-family:sans-serif;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em;">Density</div>
+                  <div style="width:64px;height:6px;border-radius:3px;background:linear-gradient(90deg,rgba(0,140,255,0.8),rgba(0,220,120,0.8),rgba(255,200,0,0.9),rgba(255,80,20,1),rgba(255,20,50,1));"></div>
+                  <div style="display:flex;justify-content:space-between;font-size:8px;color:#8888aa;font-family:sans-serif;margin-top:2px;width:64px;"><span>Low</span><span>High</span></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(5,5,14,0.88);border:1px solid rgba(200,255,0,0.2);border-radius:10px;padding:5px 8px;">
+                  <div style="font-size:10px;color:#c8ff00;font-family:sans-serif;font-weight:600;">12 live</div>
+                </div>
+              </div>
+              <!-- Bottom card -->
+              <div style="background:#13132a;border-top:1px solid rgba(255,255,255,0.06);padding:12px 16px;">
+                <div style="font-size:10px;color:#ff4d6d;font-family:sans-serif;margin-bottom:3px;">🔴 HOTTEST ZONE · WILLIAMSBURG</div>
+                <div style="font-size:14px;font-weight:600;color:#e8e8f0;font-family:sans-serif;">Output BK · 3 events nearby</div>
+                <div style="font-size:11px;color:#8888aa;font-family:sans-serif;margin-top:2px;">500m radius · Opens 10PM</div>
+                <div style="margin-top:10px;display:flex;gap:8px;">
+                  <button style="flex:1;background:#c8ff00;border:none;border-radius:16px;padding:8px;font-size:11px;font-weight:700;color:#050508;font-family:sans-serif;cursor:pointer;">Explore Zone</button>
+                  <button style="width:36px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:16px;font-size:13px;cursor:pointer;">♡</button>
+                </div>
+              </div>
+            </div>
+            <div style="position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);width:140px;height:30px;background:rgba(200,255,0,0.25);filter:blur(24px);border-radius:50%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIBE SCORE + VIBE CHECK -->
+  <section id="vibecheck" class="py-28 px-6 relative overflow-hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 50%,rgba(155,92,255,0.08),transparent);pointer-events:none;"></div>
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Section header -->
+      <div class="text-center mb-20 reveal">
+        <div class="inline-block bg-pulse bg-opacity-10 border border-pulse border-opacity-20 rounded-full px-4 py-1 text-pulse text-xs font-display tracking-widest uppercase mb-4">Real-Time Intelligence</div>
+        <h2 class="font-display font-800 text-4xl md:text-5xl text-ghost tracking-tight mb-4">Know Before<br/><span class="text-pulse">You Go.</span></h2>
+        <p class="font-body text-mist text-lg max-w-xl mx-auto leading-relaxed">Two features that make Bashment the only honest nightlife guide. No curated PR shots — just real crowd data, live.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+        <!-- VIBE SCORE -->
+        <div class="reveal feature-card rounded-3xl p-10 relative overflow-hidden">
+          <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:rgba(200,255,0,0.04);border-radius:50%;pointer-events:none;"></div>
+          <div class="inline-flex items-center gap-2 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-neon bg-opacity-15 border border-neon border-opacity-20 flex items-center justify-center text-lg">⚡</div>
+            <span class="font-display font-700 text-ghost text-lg">Vibe Score</span>
+            <span class="ml-2 text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-2 py-0.5">Live · Updates every 60s</span>
+          </div>
+          <p class="font-body text-mist text-sm leading-relaxed mb-8">A crowd-sourced live score from 0–100 calculated from check-ins, capacity fill rate, Vibe Check posts, and patron reactions. No star ratings — just the real temperature of the room, right now.</p>
+
+          <!-- Score display mockup -->
+          <div style="background:rgba(10,10,20,0.8);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <div>
+                <div style="font-size:11px;color:#8888aa;font-family:sans-serif;margin-bottom:2px;">Output BK — Right Now</div>
+                <div style="font-size:13px;color:#e0e0f0;font-family:sans-serif;font-weight:600;">Techno Night w/ JASSS</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:36px;font-weight:800;font-family:Syne,sans-serif;color:#c8ff00;line-height:1;" id="vscore">87</div>
+                <div style="font-size:10px;color:#8888aa;font-family:sans-serif;">/ 100</div>
+              </div>
+            </div>
+            <!-- Score bar -->
+            <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:12px;">
+              <div id="vscoreBar" style="height:100%;width:87%;background:linear-gradient(90deg,#9b5cff,#c8ff00);border-radius:4px;transition:width 1s ease;"></div>
+            </div>
+            <!-- Sub metrics -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:8px;text-align:center;">
+                <div style="font-size:14px;font-weight:700;color:#c8ff00;font-family:Syne,sans-serif;">94%</div>
+                <div style="font-size:9px;color:#8888aa;font-family:sans-serif;margin-top:2px;">Capacity</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:8px;text-align:center;">
+                <div style="font-size:14px;font-weight:700;color:#ff4d6d;font-family:Syne,sans-serif;">🔥 Fire</div>
+                <div style="font-size:9px;color:#8888aa;font-family:sans-serif;margin-top:2px;">Crowd Mood</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:8px;text-align:center;">
+                <div style="font-size:14px;font-weight:700;color:#9b5cff;font-family:Syne,sans-serif;">147</div>
+                <div style="font-size:9px;color:#8888aa;font-family:sans-serif;margin-top:2px;">Check-ins</div>
+              </div>
+            </div>
+            <!-- Trend -->
+            <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
+              <svg width="48" height="20" viewBox="0 0 48 20"><polyline points="0,18 8,14 16,16 24,8 32,10 40,4 48,2" fill="none" stroke="#c8ff00" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              <span style="font-size:10px;color:#c8ff00;font-family:sans-serif;">↑ Rising fast · peaked 11:30 PM</span>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">Crowd-sourced</span>
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">No fake reviews</span>
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">Updates every minute</span>
+          </div>
+        </div>
+
+        <!-- VIBE CHECK -->
+        <div class="reveal reveal-delay-1 feature-card rounded-3xl p-10 relative overflow-hidden">
+          <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:rgba(255,77,109,0.04);border-radius:50%;pointer-events:none;"></div>
+          <div class="inline-flex items-center gap-2 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-ember bg-opacity-15 border border-ember border-opacity-20 flex items-center justify-center text-lg">📹</div>
+            <span class="font-display font-700 text-ghost text-lg">Vibe Check</span>
+            <span class="ml-2 text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-2 py-0.5">10s · Live moments</span>
+          </div>
+          <p class="font-body text-mist text-sm leading-relaxed mb-8">Promoters and patrons capture raw 10-second clips from inside the venue — no filters, no polish. Stack of real moments that tell you exactly what the room feels, sounds, and looks like right now.</p>
+
+          <!-- Vibe Check feed mockup -->
+          <div style="background:rgba(10,10,20,0.8);border:1px solid rgba(255,255,255,0.07);border-radius:20px;overflow:hidden;">
+            <!-- Story row -->
+            <div style="padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="font-size:10px;color:#8888aa;font-family:sans-serif;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;">Vibe Checks · Output BK</div>
+              <div style="display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+                <!-- Story bubbles -->
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                  <div style="width:52px;height:52px;border-radius:50%;border:2px solid #c8ff00;padding:2px;background:#0a0a14;">
+                    <div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#1e1e38,#2a1a40);display:flex;align-items:center;justify-content:center;font-size:18px;">🕺</div>
+                  </div>
+                  <span style="font-size:9px;color:#ccccee;font-family:sans-serif;">@djrasha</span>
+                </div>
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                  <div style="width:52px;height:52px;border-radius:50%;border:2px solid #ff4d6d;padding:2px;background:#0a0a14;">
+                    <div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#2a1018,#3a1a1a);display:flex;align-items:center;justify-content:center;font-size:18px;">🎶</div>
+                  </div>
+                  <span style="font-size:9px;color:#ccccee;font-family:sans-serif;">@amara_k</span>
+                </div>
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                  <div style="width:52px;height:52px;border-radius:50%;border:2px solid #9b5cff;padding:2px;background:#0a0a14;">
+                    <div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#1a1030,#2a1a40);display:flex;align-items:center;justify-content:center;font-size:18px;">🔊</div>
+                  </div>
+                  <span style="font-size:9px;color:#ccccee;font-family:sans-serif;">@output_bk</span>
+                  <span style="font-size:7px;color:#9b5cff;font-family:sans-serif;background:rgba(155,92,255,0.15);border-radius:4px;padding:1px 4px;">Promoter</span>
+                </div>
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                  <div style="width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);padding:2px;background:#0a0a14;">
+                    <div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#141428,#1e1e38);display:flex;align-items:center;justify-content:center;font-size:18px;">🎤</div>
+                  </div>
+                  <span style="font-size:9px;color:#ccccee;font-family:sans-serif;">@jt_waves</span>
+                </div>
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                  <div style="width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,0.1);border-style:dashed;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);">
+                    <span style="font-size:20px;color:#8888aa;">+</span>
+                  </div>
+                  <span style="font-size:9px;color:#8888aa;font-family:sans-serif;">Add yours</span>
+                </div>
+              </div>
+            </div>
+            <!-- Featured vibe check -->
+            <div style="padding:12px 14px 14px;">
+              <div style="background:linear-gradient(135deg,#1a1a2e,#111128);border-radius:14px;overflow:hidden;position:relative;">
+                <div style="height:90px;background:linear-gradient(135deg,rgba(155,92,255,0.3),rgba(255,77,109,0.2));display:flex;align-items:center;justify-content:center;position:relative;">
+                  <!-- Play button -->
+                  <div style="width:36px;height:36px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
+                  </div>
+                  <!-- Timer bar -->
+                  <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);">
+                    <div style="height:100%;width:60%;background:#c8ff00;"></div>
+                  </div>
+                  <!-- Duration -->
+                  <div style="position:absolute;bottom:6px;right:8px;font-size:9px;color:rgba(255,255,255,0.7);font-family:sans-serif;">0:06 / 0:10</div>
+                  <!-- Live badge -->
+                  <div style="position:absolute;top:8px;left:8px;background:rgba(255,40,60,0.9);border-radius:5px;padding:2px 7px;font-size:9px;color:white;font-family:sans-serif;font-weight:600;display:flex;align-items:center;gap:3px;"><span style="width:5px;height:5px;background:white;border-radius:50%;display:inline-block;"></span>LIVE</div>
+                </div>
+                <div style="padding:8px 10px;display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                    <span style="font-size:10px;color:#8888aa;font-family:sans-serif;">@output_bk · </span>
+                    <span style="font-size:10px;color:#9b5cff;font-family:sans-serif;">Promoter</span>
+                    <div style="font-size:11px;color:#e0e0f0;font-family:sans-serif;margin-top:1px;">Main room right now 🔊</div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <span style="font-size:11px;color:#8888aa;font-family:sans-serif;">❤️ 84</span>
+                    <span style="font-size:11px;color:#8888aa;font-family:sans-serif;">🔥 201</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">Patrons &amp; Promoters</span>
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">10 seconds · raw &amp; real</span>
+            <span class="text-xs font-body text-mist bg-white bg-opacity-5 rounded-full px-3 py-1">Feeds Vibe Score</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- How they connect -->
+      <div class="mt-12 reveal">
+        <div style="background:linear-gradient(135deg,rgba(22,22,42,0.8),rgba(17,17,31,0.8));border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:28px 32px;">
+          <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div style="width:52px;height:52px;border-radius:16px;background:rgba(200,255,0,0.1);border:1px solid rgba(200,255,0,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔗</div>
+            <div>
+              <div class="font-display font-700 text-ghost text-lg mb-1">They work together.</div>
+              <div class="font-body text-mist text-sm leading-relaxed">Every Vibe Check a patron or promoter posts feeds directly into the venue's live Vibe Score. More clips = more signal = a more accurate score. The crowd becomes the review.</div>
+            </div>
+            <div class="flex-shrink-0">
+              <a href="#signup" class="btn-neon px-6 py-3 rounded-full text-sm whitespace-nowrap inline-block">Get Early Access</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-28 px-6 relative overflow-hidden">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(155,92,255,0.05),transparent);pointer-events:none;"></div>
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-20 reveal">
+        <div class="inline-block bg-pulse bg-opacity-10 border border-pulse border-opacity-20 rounded-full px-4 py-1 text-pulse text-xs font-display tracking-widest uppercase mb-4">How It Works</div>
+        <h2 class="font-display font-800 text-4xl md:text-5xl text-ghost tracking-tight mb-4">Three Steps to<br/><span class="text-pulse">Your Night</span></h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+        <!-- Step 1 -->
+        <div class="text-center reveal">
+          <div class="relative inline-block mb-8">
+            <div class="w-16 h-16 rounded-full bg-neon flex items-center justify-center font-display font-800 text-void text-2xl mx-auto" style="box-shadow:0 0 30px rgba(200,255,0,0.4);">01</div>
+            <div style="position:absolute;top:50%;left:calc(100% + 10px);width:calc(100% + 40px);height:1px;background:linear-gradient(90deg,rgba(200,255,0,0.4),rgba(155,92,255,0.1));display:none;" class="md:hidden-line"></div>
+          </div>
+          <h3 class="font-display font-700 text-ghost text-xl mb-3">Set Your Vibe</h3>
+          <p class="font-body text-mist text-sm leading-relaxed">Tell us your genre, style, and scene. Bashment builds your personal nightlife profile in under 2 minutes.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="text-center reveal reveal-delay-1">
+          <div class="relative inline-block mb-8">
+            <div class="w-16 h-16 rounded-full border border-pulse border-opacity-40 bg-pulse bg-opacity-10 flex items-center justify-center font-display font-800 text-pulse text-2xl mx-auto">02</div>
+          </div>
+          <h3 class="font-display font-700 text-ghost text-xl mb-3">Explore the Map</h3>
+          <p class="font-body text-mist text-sm leading-relaxed">See live events pulsing across your city. Filter, sort, and dive deep into event details, lineups, and vibes.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="text-center reveal reveal-delay-2">
+          <div class="relative inline-block mb-8">
+            <div class="w-16 h-16 rounded-full border border-ember border-opacity-40 bg-ember bg-opacity-10 flex items-center justify-center font-display font-800 text-ember text-2xl mx-auto">03</div>
+          </div>
+          <h3 class="font-display font-700 text-ghost text-xl mb-3">Go & Experience</h3>
+          <p class="font-body text-mist text-sm leading-relaxed">Tap, grab your ticket, invite your squad, and step out. Bashment handles the logistics — you handle the dancing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIBE / SOCIAL PROOF -->
+  <section id="vibe" class="py-28 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <div class="inline-block bg-ember bg-opacity-10 border border-ember border-opacity-20 rounded-full px-4 py-1 text-ember text-xs font-display tracking-widest uppercase mb-4">The Vibe</div>
+      <h2 class="font-display font-800 text-4xl md:text-5xl text-ghost tracking-tight mb-4">Already Buzzing.<br/><span class="text-ember">Here's the Word.</span></h2>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+      <div class="text-center reveal">
+        <div class="font-display font-800 text-4xl text-neon mb-1">50K+</div>
+        <div class="font-body text-mist text-sm">Waitlist Members</div>
+      </div>
+      <div class="text-center reveal reveal-delay-1">
+        <div class="font-display font-800 text-4xl text-pulse mb-1">200+</div>
+        <div class="font-body text-mist text-sm">Partner Venues</div>
+      </div>
+      <div class="text-center reveal reveal-delay-2">
+        <div class="font-display font-800 text-4xl text-ember mb-1">12</div>
+        <div class="font-body text-mist text-sm">Cities at Launch</div>
+      </div>
+      <div class="text-center reveal reveal-delay-3">
+        <div class="font-display font-800 text-4xl text-neon mb-1">4.9★</div>
+        <div class="font-body text-mist text-sm">Beta User Rating</div>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="proof-card rounded-3xl p-8 reveal">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-full bg-pulse bg-opacity-30 flex items-center justify-center font-display font-700 text-ghost text-sm">AK</div>
+          <div>
+            <div class="font-display font-600 text-ghost text-sm">Amara K.</div>
+            <div class="text-mist text-xs font-body">@amarakdances</div>
+          </div>
+          <div class="ml-auto text-neon text-xs font-display">Beta User</div>
+        </div>
+        <p class="font-body text-mist text-sm leading-relaxed">"Finally an app that actually knows what I'm into. Found an Afrobeats night I never would've known about — it was the best Saturday of my year."</p>
+        <div class="flex gap-1 mt-4">
+          <span class="text-neon text-xs">★★★★★</span>
+        </div>
+      </div>
+
+      <div class="proof-card rounded-3xl p-8 reveal reveal-delay-1" style="border-color:rgba(200,255,0,0.12);">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-full bg-neon bg-opacity-20 flex items-center justify-center font-display font-700 text-neon text-sm">JT</div>
+          <div>
+            <div class="font-display font-600 text-ghost text-sm">Jordan T.</div>
+            <div class="text-mist text-xs font-body">@techno_jordan</div>
+          </div>
+          <div class="ml-auto text-neon text-xs font-display">Beta User</div>
+        </div>
+        <p class="font-body text-mist text-sm leading-relaxed">"The radar feature is insane — I can see what's hot nearby in real time. I've gone out more in the last month than all of last year."</p>
+        <div class="flex gap-1 mt-4">
+          <span class="text-neon text-xs">★★★★★</span>
+        </div>
+      </div>
+
+      <div class="proof-card rounded-3xl p-8 reveal reveal-delay-2">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-full bg-ember bg-opacity-20 flex items-center justify-center font-display font-700 text-ember text-sm">SC</div>
+          <div>
+            <div class="font-display font-600 text-ghost text-sm">Sofia C.</div>
+            <div class="text-mist text-xs font-body">@sofiaxsounds</div>
+          </div>
+          <div class="ml-auto text-neon text-xs font-display">Beta User</div>
+        </div>
+        <p class="font-body text-mist text-sm leading-relaxed">"The members-only stuff is next level. Got into a rooftop after-party in Williamsburg that wasn't listed anywhere else. Bashment is the cheat code."</p>
+        <div class="flex gap-1 mt-4">
+          <span class="text-neon text-xs">★★★★★</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vibe tags -->
+    <div class="flex flex-wrap gap-3 justify-center mt-16 reveal">
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🎵 Techno</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🥁 Afrobeats</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🏙️ Rooftop Parties</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🎷 Jazz Nights</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🕺 Deep House</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🎤 Hip-Hop</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🌙 Late Night</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🎸 Indie</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🎆 Warehouse Raves</span>
+      <span class="vibe-tag px-4 py-2 rounded-full text-ghost text-sm font-body">🌊 Amapiano</span>
+    </div>
+  </section>
+
+  <!-- EMAIL SIGNUP -->
+  <section id="signup" class="py-28 px-6 relative overflow-hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(155,92,255,0.12),transparent);pointer-events:none;"></div>
+    <div class="max-w-2xl mx-auto text-center relative">
+      <div class="reveal">
+        <div class="inline-block bg-neon bg-opacity-10 border border-neon border-opacity-20 rounded-full px-4 py-1 text-neon text-xs font-display tracking-widest uppercase mb-6">Limited Access</div>
+        <h2 class="font-display font-800 text-4xl md:text-6xl text-ghost tracking-tight mb-4">Get In<br/><span class="text-neon">Before Everyone Else.</span></h2>
+        <p class="font-body text-mist text-lg mb-10 leading-relaxed">Join the waitlist now and get early access, exclusive event drops, and free premium for your first month.</p>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <form id="waitlist-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="handleSubmit(event)">
+          <input
+            type="email"
+            id="email-input"
+            placeholder="your@email.com"
+            required
+            class="email-input flex-1 px-5 py-4 rounded-full text-sm"
+          />
+          <button type="submit" class="btn-neon px-7 py-4 rounded-full text-sm whitespace-nowrap">
+            Join Waitlist
+          </button>
+        </form>
+        <div id="success-msg" style="display:none;" class="mt-6 text-neon font-display text-sm">
+          🎉 You're on the list! We'll hit you first when we drop.
+        </div>
+        <p class="font-body text-mist text-xs mt-4">No spam. No BS. Just your city's best nights.</p>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="flex flex-wrap gap-6 justify-center mt-12 reveal reveal-delay-2">
+        <div class="flex items-center gap-2 text-mist text-xs font-body">
+          <span class="text-neon">✓</span> Zero Spam
+        </div>
+        <div class="flex items-center gap-2 text-mist text-xs font-body">
+          <span class="text-neon">✓</span> Cancel Anytime
+        </div>
+        <div class="flex items-center gap-2 text-mist text-xs font-body">
+          <span class="text-neon">✓</span> Free Beta Access
+        </div>
+        <div class="flex items-center gap-2 text-mist text-xs font-body">
+          <span class="text-neon">✓</span> No Credit Card
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white border-opacity-5 py-12 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+        <div class="logo-b text-ghost text-xl">BASH<span class="text-neon">MENT</span></div>
+        <div class="flex gap-8 text-mist text-sm font-body">
+          <a href="#" class="hover:text-ghost transition-colors">Privacy</a>
+          <a href="#" class="hover:text-ghost transition-colors">Terms</a>
+          <a href="#" class="hover:text-ghost transition-colors">Contact</a>
+          <a href="#" class="hover:text-ghost transition-colors">Press</a>
+        </div>
+        <div class="flex gap-4">
+          <!-- Instagram -->
+          <a href="#" class="w-10 h-10 rounded-full border border-white border-opacity-10 flex items-center justify-center text-mist hover:text-ghost hover:border-opacity-30 transition-all">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <!-- Twitter/X -->
+          <a href="#" class="w-10 h-10 rounded-full border border-white border-opacity-10 flex items-center justify-center text-mist hover:text-ghost hover:border-opacity-30 transition-all">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <!-- TikTok -->
+          <a href="#" class="w-10 h-10 rounded-full border border-white border-opacity-10 flex items-center justify-center text-mist hover:text-ghost hover:border-opacity-30 transition-all">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.28 8.28 0 004.83 1.54V6.78a4.85 4.85 0 01-1.06-.09z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="text-center text-mist text-xs font-body border-t border-white border-opacity-5 pt-8">
+        © 2025 Bashment Inc. All rights reserved. Built for the night owls.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          if (entry.target.id === 'heatmap-section') initHeatMap();
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Waitlist form
+    function handleSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value;
+      if (email) {
+        document.getElementById('waitlist-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      }
+    }
+
+    // Smooth close mobile menu on link click
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.remove('open');
+      });
+    });
+
+    // Heat map canvas rendering
+    function initHeatCanvases() {
+      const mapC = document.getElementById('hmMapCanvas');
+      const heatC = document.getElementById('hmHeatCanvas');
+      if (!mapC || !heatC) return;
+      const parent = mapC.parentElement;
+      const w = parent.clientWidth || 280;
+      const h = parent.clientHeight || 340;
+      mapC.width = w; mapC.height = h;
+      heatC.width = w; heatC.height = h;
+      drawBaseMap(mapC);
+      drawHeatLayer(heatC, w, h);
+    }
+
+    function drawBaseMap(canvas) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.fillStyle = '#080812';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+      for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+      const roads = [
+        [[0,h*0.35],[w*0.5,h*0.32],[w,h*0.36]],
+        [[0,h*0.6],[w,h*0.58]],
+        [[w*0.38,0],[w*0.4,h]],
+        [[w*0.65,0],[w*0.67,h]],
+        [[0,h*0.15],[w*0.35,h*0.18],[w,h*0.16]],
+      ];
+      roads.forEach(pts => {
+        ctx.beginPath();
+        ctx.moveTo(pts[0][0],pts[0][1]);
+        for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+        ctx.strokeStyle='rgba(255,255,255,0.07)';
+        ctx.lineWidth=1.5;
+        ctx.stroke();
+      });
+      [[w*0.08,h*0.05,w*0.3,h*0.22],[w*0.42,h*0.04,w*0.6,h*0.2],[w*0.68,h*0.06,w*0.92,h*0.24],
+       [w*0.05,h*0.4,w*0.32,h*0.52],[w*0.44,h*0.38,w*0.6,h*0.5],[w*0.68,h*0.42,w*0.9,h*0.52],
+       [w*0.1,h*0.64,w*0.35,h*0.78],[w*0.42,h*0.65,w*0.62,h*0.8],[w*0.66,h*0.63,w*0.9,h*0.78]
+      ].forEach(b=>{
+        ctx.fillStyle='rgba(255,255,255,0.02)';
+        ctx.strokeStyle='rgba(255,255,255,0.04)';
+        ctx.lineWidth=0.5;
+        ctx.fillRect(b[0],b[1],b[2]-b[0],b[3]-b[1]);
+        ctx.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1]);
+      });
+    }
+
+    function drawHeatLayer(canvas, w, h) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,w,h);
+      const pts = [
+        {x:0.42,y:0.28,r:90,i:1.0},
+        {x:0.63,y:0.42,r:75,i:0.88},
+        {x:0.28,y:0.55,r:65,i:0.65},
+        {x:0.70,y:0.22,r:50,i:0.45},
+        {x:0.50,y:0.50,r:55,i:0.55},
+      ];
+      pts.forEach(p=>{
+        const cx=p.x*w, cy=p.y*h, r=p.r*(w/280);
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+        if(p.i>0.85){
+          g.addColorStop(0,`rgba(255,20,50,${p.i*0.92})`);
+          g.addColorStop(0.35,`rgba(255,90,20,${p.i*0.7})`);
+          g.addColorStop(0.65,`rgba(255,200,0,${p.i*0.4})`);
+          g.addColorStop(1,'rgba(0,0,0,0)');
+        } else if(p.i>0.55){
+          g.addColorStop(0,`rgba(255,160,0,${p.i*0.85})`);
+          g.addColorStop(0.45,`rgba(255,210,0,${p.i*0.45})`);
+          g.addColorStop(0.75,`rgba(0,220,120,${p.i*0.2})`);
+          g.addColorStop(1,'rgba(0,0,0,0)');
+        } else {
+          g.addColorStop(0,`rgba(0,160,255,${p.i*0.8})`);
+          g.addColorStop(0.55,`rgba(0,100,200,${p.i*0.3})`);
+          g.addColorStop(1,'rgba(0,0,0,0)');
+        }
+        ctx.fillStyle=g;
+        ctx.beginPath();
+        ctx.arc(cx,cy,r,0,Math.PI*2);
+        ctx.fill();
+      });
+    }
+
+    // Vibe score live animation
+    function animateVibeScore() {
+      const scoreEl = document.getElementById('vscore');
+      const barEl = document.getElementById('vscoreBar');
+      if (!scoreEl || !barEl) return;
+      const base = 84;
+      setInterval(() => {
+        const delta = Math.floor(Math.random() * 7) - 2;
+        const current = parseInt(scoreEl.textContent);
+        const next = Math.min(99, Math.max(70, current + delta));
+        scoreEl.textContent = next;
+        barEl.style.width = next + '%';
+      }, 3000);
+    }
+
+    setTimeout(() => {
+      initHeatCanvases();
+      animateVibeScore();
+    }, 300);
+    window.addEventListener('resize', initHeatCanvases);
+  </script>
+</body>
+</html>
