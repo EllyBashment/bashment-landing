@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bashment — The Operating System for Nightlife & Culture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --gold: #f5a623; --gold-bright: #ffcc55; --gold-deep: #c17d10;
+      --amber: #e8820c; --ember: #ff6b35; --cream: #f0e6cc;
+      --mist: rgba(240,230,204,0.55); --dim: rgba(240,230,204,0.32);
+      --bg: #080608; --border: rgba(245,166,35,0.18); --border-bright: rgba(245,166,35,0.4);
+    }
+    body { background: var(--bg); color: var(--cream); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+    .city-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% 100%, #2a1500 0%, #140a00 35%, #080608 70%);
+      overflow: hidden;
+    }
+    .city-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle 3px at 12% 78%, rgba(255,180,60,0.9) 0%, transparent 4px),
+        radial-gradient(circle 5px at 18% 82%, rgba(255,140,30,0.7) 0%, transparent 8px),
+        radial-gradient(circle 2px at 25% 75%, rgba(255,200,80,0.8) 0%, transparent 3px),
+        radial-gradient(circle 4px at 32% 85%, rgba(255,120,20,0.6) 0%, transparent 6px),
+        radial-gradient(circle 3px at 40% 79%, rgba(255,180,60,0.7) 0%, transparent 5px),
+        radial-gradient(circle 6px at 48% 88%, rgba(255,150,40,0.5) 0%, transparent 10px),
+        radial-gradient(circle 2px at 55% 76%, rgba(255,200,90,0.8) 0%, transparent 4px),
+        radial-gradient(circle 4px at 62% 83%, rgba(255,130,25,0.6) 0%, transparent 7px),
+        radial-gradient(circle 3px at 70% 80%, rgba(255,180,60,0.7) 0%, transparent 5px),
+        radial-gradient(circle 5px at 78% 86%, rgba(255,110,20,0.5) 0%, transparent 8px),
+        radial-gradient(circle 2px at 85% 77%, rgba(255,200,80,0.8) 0%, transparent 3px),
+        radial-gradient(circle 4px at 92% 84%, rgba(255,160,45,0.6) 0%, transparent 6px),
+        radial-gradient(circle 8px at 15% 88%, rgba(255,120,30,0.35) 0%, transparent 20px),
+        radial-gradient(circle 10px at 35% 91%, rgba(255,100,20,0.3) 0%, transparent 25px),
+        radial-gradient(circle 12px at 60% 90%, rgba(255,130,35,0.28) 0%, transparent 30px),
+        radial-gradient(circle 8px at 80% 89%, rgba(255,110,25,0.32) 0%, transparent 20px),
+        radial-gradient(circle 3px at 8% 72%, rgba(255,180,60,0.6) 0%, transparent 5px),
+        radial-gradient(circle 2px at 22% 68%, rgba(255,200,80,0.5) 0%, transparent 3px),
+        radial-gradient(circle 4px at 45% 70%, rgba(255,150,40,0.55) 0%, transparent 6px),
+        radial-gradient(circle 3px at 68% 73%, rgba(255,180,60,0.6) 0%, transparent 5px),
+        radial-gradient(circle 2px at 88% 69%, rgba(255,200,90,0.5) 0%, transparent 3px);
+    }
+    .city-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 95%, rgba(255,120,20,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 50% 98%, rgba(255,140,30,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 80% 95%, rgba(255,100,15,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 25% at 50% 100%, rgba(180,80,0,0.35) 0%, transparent 70%);
+    }
+    .top-fade {
+      position: fixed; top: 0; left: 0; right: 0; height: 200px;
+      background: linear-gradient(to bottom, rgba(8,6,8,1) 0%, transparent 100%);
+      z-index: 1; pointer-events: none;
+    }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--gold-deep); border-radius: 2px; }
+
+    .page { position: relative; z-index: 2; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 48px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.4rem; color: #fff; letter-spacing: -0.03em; }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.82rem; color: var(--mist); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.25s; }
+    .nav-links a:hover { color: var(--gold); }
+    .btn-primary { background: var(--gold); color: #0a0600; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.82rem; padding: 10px 24px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.25s; box-shadow: 0 0 24px rgba(245,166,35,0.35); }
+    .btn-primary:hover { background: var(--gold-bright); box-shadow: 0 0 40px rgba(245,166,35,0.6); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--border-bright); font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 0.82rem; padding: 10px 24px; border-radius: 100px; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.25s; }
+    .btn-outline:hover { background: rgba(245,166,35,0.1); }
+    #hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--cream); }
+
+    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 24px 80px; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); border-radius: 100px; padding: 6px 16px; font-size: 0.72rem; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 32px; }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.6rem,6vw,5.8rem); line-height: 1.0; letter-spacing: -0.04em; color: #fff; margin-bottom: 20px; }
+    .hero-title em { font-style: normal; color: var(--gold); letter-spacing: -0.04em; }
+    .hero-sub { font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.95rem,1.8vw,1.25rem); color: var(--mist); margin-bottom: 28px; font-weight: 400; line-height: 1.7; max-width: 580px; }
+    .hero-body { font-size: 0.95rem; font-weight: 300; color: var(--dim); max-width: 520px; line-height: 1.8; margin-bottom: 44px; }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .avatar-cluster { display: flex; }
+    .avatar-cluster .av { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #0e0c10; margin-left: -8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #0a0600; flex-shrink: 0; }
+    .avatar-cluster .av:first-child { margin-left: 0; }
+
+    .ticker { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 0; background: rgba(245,166,35,0.02); }
+    .ticker-track { display: flex; gap: 0; animation: tick 30s linear infinite; white-space: nowrap; }
+    @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .ticker-item { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-deep); padding: 0 32px; }
+    .ticker-sep { color: var(--gold); opacity: 0.4; }
+
+    section { padding: 100px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .section-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2rem,3.8vw,3.4rem); line-height: 1.06; letter-spacing: -0.03em; color: #fff; margin-bottom: 20px; }
+    .section-title em { font-style: normal; color: var(--gold); letter-spacing: -0.03em; }
+    .section-body { font-size: 1rem; font-weight: 400; color: var(--mist); line-height: 1.8; max-width: 540px; }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s} .d2{transition-delay:.18s} .d3{transition-delay:.28s} .d4{transition-delay:.38s} .d5{transition-delay:.48s}
+
+    /* Phone */
+    .phone { width: 200px; border-radius: 32px; background: #0e0c10; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.05) inset; overflow: hidden; flex-shrink: 0; position: relative; }
+    .phone-center { width: 224px; border-radius: 36px; box-shadow: 0 60px 120px rgba(0,0,0,0.9), 0 0 60px rgba(245,166,35,0.14), 0 0 0 0.5px rgba(255,255,255,0.07) inset; }
+    .phone-statusbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 4px; font-size: 9px; color: rgba(255,255,255,0.5); }
+    .pnav { background: #0e0c10; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; padding: 8px 0 10px; }
+    .pnav-item { text-align: center; }
+    .pnav-item .pi { font-size: 14px; }
+    .pnav-item .pl { font-size: 7px; color: rgba(255,255,255,0.3); }
+    .pnav-item.active .pl { color: var(--gold); }
+
+    /* Walkthrough */
+    .walkthrough-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 14px; padding: 40px 0 20px; overflow-x: auto; scrollbar-width: none; }
+    .walkthrough-wrap::-webkit-scrollbar { display: none; }
+    .walkthrough-step { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .walkthrough-caption { font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--cream); text-align: center; max-width: 150px; line-height: 1.4; letter-spacing: -0.01em; }
+
+    /* Features */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: 24px; overflow: hidden; margin-top: 60px; }
+    .feat-card { background: rgba(255,255,255,0.025); padding: 36px 32px; border: 0.5px solid var(--border); transition: background 0.3s; position: relative; overflow: hidden; }
+    .feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent); opacity: 0; transition: opacity 0.3s; }
+    .feat-card:hover { background: rgba(245,166,35,0.04); }
+    .feat-card:hover::before { opacity: 1; }
+    .feat-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 20px; }
+    .feat-title { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .feat-body { font-size: 0.875rem; font-weight: 400; color: var(--mist); line-height: 1.75; }
+
+    /* Stats */
+    .stats-row { display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+    .stat { flex: 1; padding: 36px 24px; text-align: center; border-right: 1px solid var(--border); }
+    .stat:last-child { border-right: none; }
+    .stat-num { font-family: 'Sora', sans-serif; font-size: 2.8rem; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 6px; letter-spacing: -0.04em; }
+    .stat-label { font-size: 0.78rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* Testimonials */
+    .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 60px; }
+    .testi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 28px; transition: border-color 0.3s; }
+    .testi-card:hover { border-color: rgba(245,166,35,0.3); }
+    .testi-stars { color: var(--gold); font-size: 12px; letter-spacing: 2px; margin-bottom: 16px; }
+    .testi-text { font-size: 0.9rem; font-weight: 400; color: var(--mist); line-height: 1.8; margin-bottom: 20px; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #0a0600; background: var(--gold); flex-shrink: 0; }
+    .testi-name { font-size: 0.82rem; font-weight: 600; color: var(--cream); }
+    .testi-handle { font-size: 0.75rem; color: var(--dim); }
+
+    /* CTA */
+    .cta-section { text-align: center; padding: 120px 24px; }
+    .email-row { display: flex; gap: 10px; max-width: 460px; margin: 40px auto 0; }
+    .email-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(245,166,35,0.2); border-radius: 100px; padding: 14px 24px; color: var(--cream); font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.25s; }
+    .email-input::placeholder { color: var(--dim); }
+    .email-input:focus { border-color: rgba(245,166,35,0.55); }
+    .trust-row { display: flex; justify-content: center; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
+    .trust-item { font-size: 0.75rem; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+    .trust-item span { color: var(--gold); }
+
+    footer { border-top: 1px solid var(--border); padding: 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff; letter-spacing: -0.03em; }
+    .footer-logo span { color: var(--gold); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.78rem; color: var(--dim); text-decoration: none; transition: color 0.2s; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: 0.72rem; color: var(--dim); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      #hamburger { display: block; }
+      .stats-row { flex-direction: column; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:last-child { border-bottom: none; }
+      footer { flex-direction: column; text-align: center; padding: 32px 24px; }
+      .footer-links { justify-content: center; }
+      .email-row { flex-direction: column; }
+      .walkthrough-wrap { justify-content: flex-start; }
+    }
+
+    #mob-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: rgba(8,6,8,0.97); padding: 24px; border-bottom: 1px solid var(--border); flex-direction: column; gap: 4px; }
+    #mob-menu.open { display: flex; }
+    #mob-menu a { color: var(--mist); text-decoration: none; font-size: 0.9rem; display: block; padding: 10px 0; border-bottom: 1px solid rgba(245,166,35,0.07); }
+
+    .popup-card { background: rgba(14,12,16,0.97); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; }
+    .pin-btn { background: var(--gold); color: #0a0600; border: none; border-radius: 8px; padding: 6px 0; width: 100%; font-size: 10px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 8px; }
+
+    /* Genre tags */
+    .gtag {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--mist);
+      background: rgba(245,166,35,0.08);
+      border: 1px solid rgba(245,166,35,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .gtag:hover { background: rgba(245,166,35,0.15); border-color: rgba(245,166,35,0.4); color: var(--cream); }
+  </style>
+</head>
+<body>
+  <div class="city-bg"></div>
+  <div class="top-fade"></div>
+
+  <nav>
+    <div class="nav-logo">Bash<span>ment</span></div>
+    <div class="nav-links">
+      <a href="#walkthrough">How It Works</a>
+      <a href="#features">Features</a>
+      <a href="#social">Community</a>
+      <a href="#signup" class="btn-primary">Join Beta</a>
+    </div>
+    <button id="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="2" y1="6" x2="20" y2="6"/><line x1="2" y1="12" x2="20" y2="12"/><line x1="2" y1="18" x2="20" y2="18"/></svg>
+    </button>
+  </nav>
+
+  <div id="mob-menu">
+    <a href="#walkthrough">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#social">Community</a>
+    <a href="#signup" class="btn-primary" style="margin-top:12px;text-align:center;border-radius:100px;">Join Beta</a>
+  </div>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow reveal"><div class="hero-eyebrow-dot"></div>Early Access — Limited Spots</div>
+      <h1 class="hero-title reveal d1">The Operating System<br/>for <em>Nightlife & Culture.</em></h1>
+      <p class="hero-sub reveal d2">Bashment helps event promoters predict attendance,<br/>optimise marketing, and increase revenue using real-time data.</p>
+      <p class="hero-body reveal d3">Live heat maps, Vibe Scores, and crowd intelligence — built for promoters who want to fill rooms, and patrons who want to find them. Your city's nightlife, powered by real data.</p>
+      <div class="hero-ctas reveal d4">
+        <a href="#signup" class="btn-primary">Join Beta</a>
+        <a href="#walkthrough" class="btn-outline">See How It Works</a>
+      </div>
+      <div class="reveal d5" style="margin-top:32px;display:flex;align-items:center;gap:12px;justify-content:center;">
+        <div class="avatar-cluster">
+          <div class="av" style="background:#d4a843;">AK</div>
+          <div class="av" style="background:#c8895c;">JT</div>
+          <div class="av" style="background:#b87333;">SC</div>
+          <div class="av" style="background:#d4963a;">MR</div>
+        </div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:500;color:var(--cream);">50,000+ on the beta list</div>
+          <div style="font-size:0.7rem;color:var(--dim);">Launching in 12 cities</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker">
+      <div class="ticker-track">
+        <span class="ticker-item">Afrobeats</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Techno</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Deep House</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Amapiano</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Hip-Hop</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Jazz Nights</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Rooftop Parties</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Warehouse Raves</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Live Bands</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Bashment</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Afrobeats</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Techno</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Deep House</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Amapiano</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Hip-Hop</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Jazz Nights</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Rooftop Parties</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Warehouse Raves</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Live Bands</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Bashment</span><span class="ticker-sep"> · </span>
+      </div>
+    </div>
+
+    <!-- WALKTHROUGH -->
+    <section id="walkthrough" style="padding:100px 24px 60px;">
+      <div class="section-inner">
+        <div style="text-align:center;" class="reveal">
+          <div class="section-label">User Journey</div>
+          <h2 class="section-title" style="text-align:center;"><em>Bashment</em> — Decide Where To Go Tonight</h2>
+          <p class="section-body" style="margin:0 auto;text-align:center;">
+            <span style="font-family:'Sora',sans-serif;font-weight:700;color:var(--gold);">No group chat purgatory!</span>
+            &nbsp;From heat map to dance floor in minutes. Here's how the night unfolds.
+          </p>
+        </div>
+
+        <div class="walkthrough-wrap">
+
+          <!-- Phone 1: Heat Map -->
+          <div class="walkthrough-step reveal d1">
+            <div class="phone">
+              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div style="background:#0e0a04;height:370px;position:relative;overflow:hidden;">
+                <canvas id="c1" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+                <div style="position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;align-items:center;z-index:2;">
+                  <div style="background:rgba(0,0,0,0.7);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:4px;">
+                    <span style="font-size:8px;">📍</span>
+                    <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:500;">What's Hot Tonight</span>
+                  </div>
+                  <div style="background:rgba(245,166,35,0.18);border:1px solid rgba(245,166,35,0.3);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);">Filters</div>
+                </div>
+                <!-- Pins -->
+                <div style="position:absolute;left:37%;top:33%;z-index:3;transform:translate(-50%,-50%);">
+                  <div style="width:26px;height:26px;background:var(--gold);border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 0 14px rgba(245,166,35,0.8);">🎵</div>
+                </div>
+                <div style="position:absolute;left:60%;top:48%;z-index:3;transform:translate(-50%,-50%);">
+                  <div style="width:22px;height:22px;background:#ff6b35;border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 0 10px rgba(255,107,53,0.7);">🥁</div>
+                </div>
+                <div style="position:absolute;left:23%;top:57%;z-index:3;transform:translate(-50%,-50%);">
+                  <div style="width:20px;height:20px;background:#c8a028;border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:8px;">🕺</div>
+                </div>
+                <!-- Bottom cards -->
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(to top,rgba(0,0,0,0.92),transparent);z-index:2;display:flex;gap:5px;">
+                  <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:6px 7px;flex:1;border:1px solid rgba(245,166,35,0.15);">
+                    <div style="font-size:7px;color:var(--gold);margin-bottom:2px;">🔥 Hot Tonight</div>
+                    <div style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:500;">AfroBeats Thursdays</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">@ Lotus</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 7px;flex:1;">
+                    <div style="font-size:7px;color:rgba(255,190,60,0.8);margin-bottom:2px;">✨ Chill Vibes</div>
+                    <div style="font-size:8px;color:rgba(255,255,255,0.7);font-weight:500;">Rooftop Social</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">@ Skybar</div>
+                  </div>
+                </div>
+              </div>
+              <div class="pnav">
+                <div class="pnav-item active"><div class="pi">🗺️</div><div class="pl" style="color:var(--gold);">Map</div></div>
+                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
+                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
+                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+              </div>
+            </div>
+            <div class="walkthrough-caption">What's Hot Tonight</div>
+          </div>
+
+          <!-- Phone 2: Friend pings -->
+          <div class="walkthrough-step reveal d2">
+            <div class="phone">
+              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div style="background:#0c0a0e;height:370px;position:relative;overflow:hidden;padding:10px;">
+                <div style="position:absolute;inset:0;"><canvas id="c2" style="position:absolute;inset:0;width:100%;height:60%;opacity:0.45;"></canvas></div>
+                <div class="popup-card" style="position:absolute;left:10px;right:10px;top:70px;">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                    <div class="avatar-cluster">
+                      <div class="av" style="background:#d4a843;width:22px;height:22px;font-size:8px;margin-left:0;">F</div>
+                      <div class="av" style="background:#b87333;width:22px;height:22px;font-size:8px;">A</div>
+                      <div class="av" style="background:#c8895c;width:22px;height:22px;font-size:8px;">J</div>
+                    </div>
+                    <div style="font-size:8px;color:rgba(255,255,255,0.45);">Fred + 2 pinged this</div>
+                  </div>
+                  <div style="font-size:10px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays | @ Lotus</div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:8px;">10:00 PM – 4:00 AM</div>
+                  <div style="height:52px;border-radius:8px;background:linear-gradient(135deg,#2a1a06,#1a0c02);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px;">🎵</div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.45);margin-bottom:2px;">Early Bird: <span style="color:var(--gold);">$20</span></div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.28);margin-bottom:8px;">General Admission: $30</div>
+                  <button class="pin-btn">📍 Pin</button>
+                </div>
+                <div style="position:absolute;bottom:12px;left:14px;font-size:8px;color:rgba(255,255,255,0.3);">📍 Lotus Lounge</div>
+              </div>
+              <div class="pnav">
+                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
+                <div class="pnav-item"><div class="pi">📅</div><div class="pl">Schedule</div></div>
+                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
+                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+              </div>
+            </div>
+            <div class="walkthrough-caption">Fred pings Lotus</div>
+          </div>
+
+          <!-- Phone 3: CENTRE — Vibe Check + Vibe Score -->
+          <div class="walkthrough-step reveal d3">
+            <div class="phone phone-center">
+              <div style="background:#08080e;padding:10px 14px 6px;display:flex;align-items:center;justify-content:space-between;">
+                <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:900;color:#fff;">Bashment</div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <!-- Vibe Check video -->
+              <div style="height:210px;position:relative;overflow:hidden;">
+                <canvas id="cvc" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(255,100,20,0.35),transparent),radial-gradient(ellipse at 70% 60%,rgba(140,40,180,0.3),transparent);"></div>
+                <!-- LIVE badge -->
+                <div style="position:absolute;top:10px;left:10px;background:rgba(210,30,50,0.92);border-radius:5px;padding:3px 8px;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;gap:4px;z-index:3;">
+                  <div style="width:5px;height:5px;background:#fff;border-radius:50%;"></div>LIVE
+                </div>
+                <!-- Vibe Check label -->
+                <div style="position:absolute;top:10px;right:10px;background:rgba(245,166,35,0.18);border:1px solid rgba(245,166,35,0.35);border-radius:6px;padding:3px 8px;font-size:8px;color:var(--gold);z-index:3;font-weight:600;">Vibe Check 📹</div>
+                <!-- Play -->
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
+                  <div style="width:44px;height:44px;background:rgba(255,255,255,0.14);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.2);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
+                  </div>
+                </div>
+                <!-- Info overlay -->
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);z-index:3;">
+                  <div style="font-size:8px;color:rgba(255,255,255,0.45);">@lotus_official · <span style="color:#b06aff;">Promoter</span></div>
+                  <div style="font-size:9px;color:#fff;font-weight:500;">Main floor right now 🔊</div>
+                </div>
+                <!-- Progress bar -->
+                <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);z-index:4;">
+                  <div style="width:65%;height:100%;background:var(--gold);"></div>
+                </div>
+              </div>
+              <!-- Event info + Vibe Score -->
+              <div style="background:#0c0a10;padding:12px 14px;">
+                <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays @ Lotus</div>
+                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:10px;">10:00 PM – 1:00 AM</div>
+
+                <!-- Vibe Score -->
+                <div style="background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:8px 10px;margin-bottom:10px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+                    <div style="font-size:8px;color:var(--gold);font-weight:600;">⚡ Vibe Score — Live</div>
+                    <div style="font-size:16px;font-weight:900;font-family:'Sora',sans-serif;color:var(--gold);" id="vs2">88</div>
+                  </div>
+                  <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;">
+                    <div id="vsb2" style="width:88%;height:100%;background:linear-gradient(90deg,#c17d10,#f5a623);border-radius:2px;transition:width 1s ease;"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-top:5px;">
+                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">94% capacity · 147 check-ins</div>
+                    <div style="font-size:7px;color:var(--gold);">↑ Rising</div>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:5px;margin-bottom:10px;">
+                  <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.2);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);">Afrobeats</div>
+                  <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,0.4);">10 PM</div>
+                  <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,0.4);">$20 EB</div>
+                </div>
+                <button style="width:100%;background:var(--gold);border:none;border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:#0a0600;font-family:'Space Grotesk',sans-serif;cursor:pointer;">Get Tickets</button>
+              </div>
+              <div class="pnav">
+                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
+                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
+                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
+                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+              </div>
+            </div>
+            <div class="walkthrough-caption" style="font-size:1rem;">Friends declare<br/>interest</div>
+          </div>
+
+          <!-- Phone 4: Crowd density / details -->
+          <div class="walkthrough-step reveal d4">
+            <div class="phone">
+              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div style="background:#0c0a10;height:370px;overflow:hidden;padding:10px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                  <div class="avatar-cluster">
+                    <div class="av" style="background:#d4a843;width:24px;height:24px;font-size:8px;margin-left:0;">A</div>
+                    <div class="av" style="background:#c8895c;width:24px;height:24px;font-size:8px;">F</div>
+                    <div class="av" style="background:#b87333;width:24px;height:24px;font-size:8px;">J</div>
+                  </div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.4);">+ 3 friends going</div>
+                </div>
+                <div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays @ Lotus</div>
+                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:12px;">10:00 PM – 4:00 AM</div>
+
+                <!-- Crowd timeline -->
+                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px;margin-bottom:10px;">
+                  <div style="font-size:8px;color:rgba(255,255,255,0.45);margin-bottom:8px;">📊 Expected Crowd · Peaks 11PM–1AM</div>
+                  <div style="display:flex;gap:3px;align-items:flex-end;height:36px;">
+                    <div style="flex:1;background:rgba(245,166,35,0.18);border-radius:2px 2px 0 0;height:25%;"></div>
+                    <div style="flex:1;background:rgba(245,166,35,0.32);border-radius:2px 2px 0 0;height:45%;"></div>
+                    <div style="flex:1;background:rgba(245,166,35,0.52);border-radius:2px 2px 0 0;height:65%;"></div>
+                    <div style="flex:1;background:rgba(245,166,35,0.78);border-radius:2px 2px 0 0;height:90%;"></div>
+                    <div style="flex:1;background:rgba(255,100,20,1);border-radius:2px 2px 0 0;height:100%;"></div>
+                    <div style="flex:1;background:rgba(255,90,15,0.92);border-radius:2px 2px 0 0;height:95%;"></div>
+                    <div style="flex:1;background:rgba(245,166,35,0.65);border-radius:2px 2px 0 0;height:72%;"></div>
+                    <div style="flex:1;background:rgba(245,166,35,0.4);border-radius:2px 2px 0 0;height:50%;"></div>
+                  </div>
+                  <div style="font-size:7px;color:rgba(255,255,255,0.28);margin-top:5px;text-align:center;">🔥 Peaks midnight · Plan accordingly</div>
+                </div>
+
+                <div style="height:55px;border-radius:9px;background:linear-gradient(135deg,#261600,#160c00);margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 10px;">
+                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(255,140,20,0.3),transparent);"></div>
+                  <div style="position:relative;z-index:1;">
+                    <div style="font-size:9px;font-weight:600;color:rgba(255,200,80,0.8);">6 Vibe Checks live</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,0.3);">Early Bird $20 · General $30</div>
+                  </div>
+                </div>
+
+                <div style="font-size:8px;color:rgba(255,255,255,0.35);margin-bottom:8px;">General Admission: <span style="color:rgba(255,255,255,0.65);">$30</span> &nbsp;·&nbsp; Early Bird: <span style="color:var(--gold);">$20</span></div>
+                <button style="width:100%;background:var(--amber);border:none;border-radius:10px;padding:9px;font-size:10px;font-weight:700;color:#0a0600;font-family:'Space Grotesk',sans-serif;cursor:pointer;">Get Tickets →</button>
+              </div>
+              <div class="pnav">
+                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
+                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
+                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
+                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+              </div>
+            </div>
+            <div class="walkthrough-caption">Details show it starts<br/>getting busy 11pm</div>
+          </div>
+
+          <!-- Phone 5: Friends pin + RSVP -->
+          <div class="walkthrough-step reveal d5">
+            <div class="phone">
+              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div style="background:#0c0a10;height:370px;overflow:hidden;padding:10px;">
+                <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);border-radius:10px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <span style="font-size:10px;">📍</span>
+                    <span style="font-size:9px;color:var(--gold);font-weight:600;">You Pinned it</span>
+                  </div>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(245,166,35,0.5)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </div>
+                <div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:8px;">AfroBeats Fridays — June 12</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+                  <div class="avatar-cluster">
+                    <div class="av" style="background:#d4a843;width:26px;height:26px;font-size:9px;margin-left:0;">AK</div>
+                    <div class="av" style="background:#b87333;width:26px;height:26px;font-size:9px;">JT</div>
+                    <div class="av" style="background:#c8895c;width:26px;height:26px;font-size:9px;">SC</div>
+                  </div>
+                  <div style="font-size:8px;color:rgba(255,255,255,0.4);">+ 2 more going</div>
+                </div>
+                <div style="height:65px;border-radius:9px;background:linear-gradient(135deg,#261800,#180e00);margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 12px;">
+                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(255,150,30,0.4),transparent);"></div>
+                  <div style="position:relative;z-index:1;">
+                    <div style="font-size:9px;font-weight:600;color:rgba(255,200,80,0.85);">AfroBeats Thursdays @ Lotus</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,0.3);margin-top:2px;">🎵 Doors 6:00 PM · 132 interested</div>
+                  </div>
+                </div>
+                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:8px;">👤 10 Going (and counting)</div>
+                <div style="height:1px;background:rgba(255,255,255,0.06);margin:8px 0;"></div>
+                <button style="width:100%;background:rgba(245,166,35,0.14);border:1px solid rgba(245,166,35,0.35);border-radius:10px;padding:10px;font-size:10px;font-weight:600;color:var(--gold);font-family:'Space Grotesk',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:8px;">
+                  📍 RSVP · Tell Your Circle ↓
+                </button>
+                <div style="font-size:7px;color:rgba(255,255,255,0.22);text-align:center;line-height:1.5;">Friends decide together — no group chat needed</div>
+              </div>
+              <div class="pnav">
+                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
+                <div class="pnav-item active"><div class="pi" style="filter:drop-shadow(0 0 4px var(--gold));">🤍</div><div class="pl" style="color:var(--gold);">Favs</div></div>
+                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
+                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+              </div>
+            </div>
+            <div class="walkthrough-caption">Friends pin + go<br/>to Lotus</div>
+          </div>
+
+        </div>
+
+        <div class="reveal" style="text-align:center;margin-top:36px;">
+          <div style="display:inline-flex;flex-direction:column;align-items:center;gap:16px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,0.4));"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.6;"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.9;"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.6;"></div>
+              <div style="width:32px;height:1px;background:linear-gradient(90deg,rgba(245,166,35,0.4),transparent);"></div>
+            </div>
+            <p style="font-family:'Sora',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:-0.03em;color:var(--cream);line-height:1.3;">Friends decide where to meet up —</p>
+            <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);border-radius:100px;padding:10px 24px;">
+              <span style="font-size:1rem;">🚫</span>
+              <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-0.02em;">No Group Chat Purgatory!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" style="padding:80px 24px;">
+      <div class="section-inner">
+        <div class="reveal">
+          <div class="section-label">Core Features</div>
+          <h2 class="section-title">Everything You Need<br/><em>For the Night</em></h2>
+          <p class="section-body">Built for people who live in the moment — not people who spend 45 minutes in a group chat deciding.</p>
+        </div>
+        <div class="features-grid reveal d2">
+          <div class="feat-card"><div class="feat-icon">🗺️</div><div class="feat-title">Live Heat Map</div><p class="feat-body">See nightlife density across your city in real time. New to town? Red means packed, blue means hidden gem. No local knowledge required.</p></div>
+          <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">Vibe Score</div><p class="feat-body">A live 0–100 score recalculated every minute from check-ins, capacity, crowd reactions, and Vibe Check posts. The crowd is the review.</p></div>
+          <div class="feat-card"><div class="feat-icon">📹</div><div class="feat-title">Vibe Check</div><p class="feat-body">10-second clips from inside the venue posted by promoters and patrons alike. No filters. Hear the music, see the crowd, decide instantly.</p></div>
+          <div class="feat-card"><div class="feat-icon">👥</div><div class="feat-title">Circles & Pings</div><p class="feat-body">Friends ping events, you see who's going. No coordination overhead — one tap tells your circle "I'm thinking Lotus tonight."</p></div>
+          <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Crowd Timeline</div><p class="feat-body">See predicted crowd density hour by hour. Know it peaks at 11PM before you leave — or plan around it entirely.</p></div>
+          <div class="feat-card"><div class="feat-icon">🎟️</div><div class="feat-title">Instant Tickets</div><p class="feat-body">Buy in-app, no hidden fees, no redirects. Early bird, general admission — one tap and you're in.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section style="padding:20px 24px 80px;">
+      <div class="section-inner">
+        <div class="stats-row reveal">
+          <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Waitlist Members</div></div>
+          <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Partner Venues</div></div>
+          <div class="stat"><div class="stat-num">12</div><div class="stat-label">Cities at Launch</div></div>
+          <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Beta Rating</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="social" style="padding:80px 24px;">
+      <div class="section-inner">
+        <div class="reveal" style="text-align:center;">
+          <div class="section-label" style="text-align:center;">The Word</div>
+          <h2 class="section-title" style="text-align:center;">Already <em>Buzzing.</em></h2>
+        </div>
+        <div class="testi-grid">
+          <div class="testi-card reveal d1">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Found an Afrobeats night in a city I'd just moved to using the heat map. Never would've known it existed. Best Saturday of my year."</p>
+            <div class="testi-author"><div class="testi-av">AK</div><div><div class="testi-name">Amara K.</div><div class="testi-handle">@amarakdances</div></div></div>
+          </div>
+          <div class="testi-card reveal d2">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"The Vibe Check is everything. Watched a 10-second clip, saw the crowd was actually moving, and bought the ticket right there."</p>
+            <div class="testi-author"><div class="testi-av" style="background:var(--amber);">JT</div><div><div class="testi-name">Jordan T.</div><div class="testi-handle">@techno_jordan</div></div></div>
+          </div>
+          <div class="testi-card reveal d3">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Someone pinged Lotus, everyone saw who's in — we decided in 30 seconds. No back-and-forth. No 'where do you want to go?' purgatory."</p>
+            <div class="testi-author"><div class="testi-av" style="background:var(--gold-deep);">SC</div><div><div class="testi-name">Sofia C.</div><div class="testi-handle">@sofiaxsounds</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / WAITLIST FORM -->
+    <section id="signup" style="padding:120px 24px;position:relative;overflow:hidden;">
+      <!-- Ambient glow behind form -->
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(245,166,35,0.07),transparent);pointer-events:none;"></div>
+
+      <div class="reveal" style="max-width:720px;margin:0 auto;position:relative;">
+
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:52px;">
+          <div class="section-label" style="text-align:center;">Limited Early Access</div>
+          <h2 class="section-title" style="text-align:center;font-size:clamp(2.5rem,5vw,4.5rem);">Get In Before<br/><em>Everyone Else.</em></h2>
+          <p style="font-size:1rem;font-weight:300;color:var(--mist);line-height:1.8;margin:20px auto 0;max-width:400px;">Join the beta — get early access, exclusive event drops, and your first month free.</p>
+        </div>
+
+        <!-- Form card -->
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,166,35,0.22);border-radius:28px;padding:48px 44px;backdrop-filter:blur(8px);">
+
+          <!-- Form states -->
+          <div id="form-wrap">
+
+            <!-- Step 1: email -->
+            <div id="step1">
+              <label style="display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Your Email Address</label>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <input
+                  id="wl-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  autocomplete="email"
+                  style="flex:1;min-width:220px;background:rgba(255,255,255,0.05);border:1px solid rgba(245,166,35,0.25);border-radius:14px;padding:16px 20px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:1rem;outline:none;transition:border-color 0.25s;"
+                  onfocus="this.style.borderColor='rgba(245,166,35,0.65)'"
+                  onblur="this.style.borderColor='rgba(245,166,35,0.25)'"
+                />
+                <button
+                  onclick="submitStep1()"
+                  style="background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;padding:16px 32px;border-radius:14px;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 0 28px rgba(245,166,35,0.35);transition:all 0.25s;"
+                  onmouseover="this.style.background='#ffcc55';this.style.boxShadow='0 0 44px rgba(245,166,35,0.6)'"
+                  onmouseout="this.style.background='var(--gold)';this.style.boxShadow='0 0 28px rgba(245,166,35,0.35)'"
+                >
+                  Join Beta →
+                </button>
+              </div>
+              <p id="err-msg" style="display:none;color:#ff7a7a;font-size:0.8rem;margin-top:10px;"></p>
+            </div>
+
+            <!-- Step 2: optional extra info -->
+            <div id="step2" style="display:none;">
+              <div style="text-align:center;margin-bottom:28px;">
+                <div style="font-size:1.6rem;margin-bottom:8px;">🎉</div>
+                <div style="font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:6px;">You're nearly in.</div>
+                <div style="font-size:0.88rem;color:var(--mist);">One more thing — help us personalise your experience.</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+                <div>
+                  <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Your City</label>
+                  <input
+                    id="wl-city"
+                    type="text"
+                    placeholder="e.g. New York"
+                    style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:13px 16px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.25s;"
+                    onfocus="this.style.borderColor='rgba(245,166,35,0.55)'"
+                    onblur="this.style.borderColor='rgba(245,166,35,0.2)'"
+                  />
+                </div>
+                <div>
+                  <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">I am a…</label>
+                  <select
+                    id="wl-type"
+                    style="width:100%;background:#1a1208;border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:13px 16px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;outline:none;appearance:none;cursor:pointer;transition:border-color 0.25s;"
+                    onfocus="this.style.borderColor='rgba(245,166,35,0.55)'"
+                    onblur="this.style.borderColor='rgba(245,166,35,0.2)'"
+                  >
+                    <option value="">Select one…</option>
+                    <option value="patron">Patron / Party Goer</option>
+                    <option value="promoter">Promoter / Organiser</option>
+                    <option value="venue_owner">Venue Owner</option>
+                    <option value="artist_dj">Artist / DJ</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Favourite Genres (pick all that apply)</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;" id="genre-tags">
+                  <span class="gtag" data-val="afrobeats" onclick="toggleTag(this)">🥁 Afrobeats</span>
+                  <span class="gtag" data-val="techno" onclick="toggleTag(this)">🎵 Techno</span>
+                  <span class="gtag" data-val="house" onclick="toggleTag(this)">🕺 House</span>
+                  <span class="gtag" data-val="hiphop" onclick="toggleTag(this)">🎤 Hip-Hop</span>
+                  <span class="gtag" data-val="amapiano" onclick="toggleTag(this)">🌊 Amapiano</span>
+                  <span class="gtag" data-val="jazz" onclick="toggleTag(this)">🎷 Jazz</span>
+                  <span class="gtag" data-val="rnb" onclick="toggleTag(this)">🎶 R&B</span>
+                  <span class="gtag" data-val="indie" onclick="toggleTag(this)">🎸 Indie</span>
+                </div>
+              </div>
+              <button
+                onclick="submitStep2()"
+                id="submit-btn"
+                style="width:100%;background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;padding:17px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 0 28px rgba(245,166,35,0.35);transition:all 0.25s;"
+                onmouseover="this.style.background='#ffcc55'"
+                onmouseout="this.style.background='var(--gold)'"
+              >
+                Secure My Spot
+              </button>
+              <button
+                onclick="submitStep2(true)"
+                style="display:block;width:100%;margin-top:12px;background:none;border:none;color:var(--dim);font-size:0.8rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;"
+              >
+                Skip — just add my email
+              </button>
+            </div>
+
+            <!-- Success state -->
+            <div id="step-success" style="display:none;text-align:center;padding:20px 0;">
+              <div style="font-size:3rem;margin-bottom:16px;">🎊</div>
+              <div style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:10px;">You're on the list.</div>
+              <div style="font-size:0.95rem;color:var(--mist);line-height:1.8;max-width:380px;margin:0 auto;">We'll hit you first when Bashment drops in your city. Keep an eye on your inbox — it's going to be a good night.</div>
+              <div style="margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);border-radius:100px;padding:10px 20px;">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 2s ease-in-out infinite;"></div>
+                <span style="font-size:0.8rem;color:var(--gold);font-weight:500;letter-spacing:0.06em;">Spot confirmed — you're in</span>
+              </div>
+            </div>
+
+            <!-- Error fallback -->
+            <div id="step-error" style="display:none;text-align:center;padding:20px 0;">
+              <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
+              <div style="font-size:0.95rem;color:var(--mist);margin-bottom:16px;">Something went wrong submitting your details. Please try again or email us directly.</div>
+              <button onclick="retryForm()" style="background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;padding:12px 28px;border-radius:12px;border:none;cursor:pointer;">Try Again</button>
+            </div>
+
+          </div><!-- /form-wrap -->
+
+          <!-- Trust row inside card -->
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:32px;padding-top:28px;border-top:1px solid rgba(245,166,35,0.1);">
+            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> No spam, ever</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> Unsubscribe any time</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> No credit card needed</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> Free beta access</div>
+          </div>
+
+        </div><!-- /form card -->
+
+        <!-- Waitlist counter -->
+        <div style="text-align:center;margin-top:28px;display:flex;align-items:center;justify-content:center;gap:10px;">
+          <div class="avatar-cluster">
+            <div class="av" style="background:#d4a843;">AK</div>
+            <div class="av" style="background:#c8895c;">JT</div>
+            <div class="av" style="background:#b87333;">SC</div>
+            <div class="av" style="background:#d4963a;">MR</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--mist);">Joining <strong style="color:var(--cream);">50,247</strong> people already in the beta</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">Bash<span>ment</span></div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+        <a href="#">Press</a>
+        <a href="#">Instagram</a>
+      </div>
+      <div class="footer-copy">© 2025 Bashment Inc. Built for the night.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Scroll reveal
+    const ro = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.07, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // Mobile menu
+    document.querySelectorAll('#mob-menu a').forEach(a => a.addEventListener('click', () => document.getElementById('mob-menu').classList.remove('open')));
+
+    // ── Waitlist form ──────────────────────────────────────────────
+    // STEP 1: Replace this URL with your Zapier "Catch Hook" webhook URL
+    // How to get it:
+    //   1. Go to zapier.com → Create Zap
+    //   2. Trigger: "Webhooks by Zapier" → Event: "Catch Hook" → Copy the URL
+    //   3. Action: "Google Sheets" → Event: "Create Spreadsheet Row"
+    //   4. Map: email, city, type, genres, timestamp → your Sheet columns
+    //   5. Paste the webhook URL below and you're live
+    const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID_HERE/';
+
+    let wlEmail = '';
+    let selectedGenres = [];
+
+    function showErr(msg) {
+      const el = document.getElementById('err-msg');
+      el.textContent = msg; el.style.display = 'block';
+    }
+
+    function submitStep1() {
+      const input = document.getElementById('wl-email');
+      const email = input.value.trim();
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !re.test(email)) { showErr('Please enter a valid email address.'); input.focus(); return; }
+      wlEmail = email;
+      document.getElementById('err-msg').style.display = 'none';
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    }
+
+    function toggleTag(el) {
+      const val = el.dataset.val;
+      if (el.classList.contains('active')) {
+        el.classList.remove('active');
+        el.style.background = 'rgba(245,166,35,0.08)';
+        el.style.borderColor = 'rgba(245,166,35,0.2)';
+        el.style.color = 'var(--mist)';
+        selectedGenres = selectedGenres.filter(v => v !== val);
+      } else {
+        el.classList.add('active');
+        el.style.background = 'rgba(245,166,35,0.22)';
+        el.style.borderColor = 'rgba(245,166,35,0.55)';
+        el.style.color = 'var(--gold)';
+        selectedGenres.push(val);
+      }
+    }
+
+    async function submitStep2(skip = false) {
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Submitting…'; btn.disabled = true;
+
+      const payload = {
+        email: wlEmail,
+        city: skip ? '' : (document.getElementById('wl-city').value.trim() || ''),
+        user_type: skip ? '' : (document.getElementById('wl-type').value || ''),
+        genres: skip ? '' : selectedGenres.join(', '),
+        timestamp: new Date().toISOString(),
+        source: 'landing_page_waitlist'
+      };
+
+      try {
+        // Zapier webhooks accept no-cors POSTs — we fire and treat as success
+        await fetch(ZAPIER_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showSuccess();
+      } catch (err) {
+        // If webhook isn't configured yet, still show success in demo mode
+        if (ZAPIER_WEBHOOK.includes('YOUR_HOOK_ID_HERE')) {
+          showSuccess(); // demo mode — no real submission
+        } else {
+          document.getElementById('step2').style.display = 'none';
+          document.getElementById('step-error').style.display = 'block';
+        }
+      }
+    }
+
+    function showSuccess() {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step-success').style.display = 'block';
+    }
+
+    function retryForm() {
+      document.getElementById('step-error').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('wl-email').value = wlEmail;
+    }
+
+    // Canvas: city heat map
+    function drawMap(id, heatPts) {
+      const c = document.getElementById(id); if (!c) return;
+      const p = c.parentElement; c.width = p.clientWidth || 200; c.height = p.clientHeight || 300;
+      const ctx = c.getContext('2d'); const w = c.width, h = c.height;
+      ctx.fillStyle = '#0c0802'; ctx.fillRect(0,0,w,h);
+      // streets
+      [[0,h*.3,w*.45,h*.28,w,h*.32],[0,h*.6,w,h*.62],[w*.35,0,w*.37,h],[w*.65,0,w*.67,h],[0,h*.12,w,h*.14]].forEach(s=>{
+        ctx.beginPath(); ctx.moveTo(s[0],s[1]);
+        for(let i=2;i<s.length;i+=2) ctx.lineTo(s[i],s[i+1]);
+        ctx.strokeStyle='rgba(255,180,60,0.1)'; ctx.lineWidth=1.5; ctx.stroke();
+      });
+      // buildings
+      [[.05,.05,.25,.2],[.4,.04,.6,.2],[.65,.05,.9,.22],[.05,.35,.28,.52],[.42,.34,.6,.52],[.64,.36,.92,.52],[.08,.66,.32,.82],[.4,.67,.62,.82],[.66,.66,.9,.82]].forEach(b=>{
+        ctx.fillStyle='rgba(255,180,40,0.03)'; ctx.strokeStyle='rgba(255,180,40,0.05)'; ctx.lineWidth=0.5;
+        ctx.fillRect(b[0]*w,b[1]*h,(b[2]-b[0])*w,(b[3]-b[1])*h); ctx.strokeRect(b[0]*w,b[1]*h,(b[2]-b[0])*w,(b[3]-b[1])*h);
+      });
+      // heat
+      heatPts.forEach(pt => {
+        const cx=pt.x*w,cy=pt.y*h,r=pt.r*Math.max(w,h);
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+        if(pt.i>.8){g.addColorStop(0,`rgba(255,55,10,${pt.i*.88})`);g.addColorStop(.3,`rgba(255,120,20,${pt.i*.62})`);g.addColorStop(.65,`rgba(255,180,40,${pt.i*.3})`);g.addColorStop(1,'rgba(0,0,0,0)');}
+        else if(pt.i>.5){g.addColorStop(0,`rgba(255,155,15,${pt.i*.82})`);g.addColorStop(.5,`rgba(255,195,55,${pt.i*.38})`);g.addColorStop(1,'rgba(0,0,0,0)');}
+        else{g.addColorStop(0,`rgba(180,130,40,${pt.i*.7})`);g.addColorStop(1,'rgba(0,0,0,0)');}
+        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+      });
+      // bokeh dots
+      for(let i=0;i<50;i++){
+        const bx=Math.random()*w,by=Math.random()*h,br=.8+Math.random()*2.5;
+        const bg=ctx.createRadialGradient(bx,by,0,bx,by,br*5);
+        bg.addColorStop(0,'rgba(255,200,80,0.85)'); bg.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(bx,by,br*5,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    // Canvas: club glow for Vibe Check
+    function drawClub(id) {
+      const c = document.getElementById(id); if (!c) return;
+      const p = c.parentElement; c.width = p.clientWidth||220; c.height = p.clientHeight||210;
+      const ctx = c.getContext('2d'); const w=c.width,h=c.height;
+      ctx.fillStyle='#060406'; ctx.fillRect(0,0,w,h);
+      [{x:.25,y:.4,r:.55,col:'rgba(255,90,15,0.55)'},{x:.72,y:.55,r:.42,col:'rgba(140,35,190,0.45)'},{x:.5,y:.15,r:.38,col:'rgba(255,190,40,0.32)'},{x:.08,y:.72,r:.3,col:'rgba(220,50,30,0.38)'}].forEach(b=>{
+        const g=ctx.createRadialGradient(b.x*w,b.y*h,0,b.x*w,b.y*h,b.r*Math.max(w,h));
+        g.addColorStop(0,b.col); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      });
+      // silhouettes
+      ctx.fillStyle='rgba(0,0,0,0.5)';
+      for(let i=0;i<14;i++){
+        const sx=(i/14)*w+(Math.random()-.5)*8, sh=28+Math.random()*18;
+        ctx.beginPath(); ctx.ellipse(sx,h-sh/2+8,6+Math.random()*4,sh/2,0,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    // Vibe score animation
+    function animVs() {
+      const el=document.getElementById('vs2'), bar=document.getElementById('vsb2');
+      if(!el||!bar) return;
+      setInterval(()=>{
+        const cur=parseInt(el.textContent);
+        const next=Math.min(99,Math.max(72,cur+Math.floor(Math.random()*7)-2));
+        el.textContent=next; bar.style.width=next+'%';
+      },3000);
+    }
+
+    function init() {
+      drawMap('c1',[{x:.38,y:.32,r:.28,i:1.0},{x:.61,y:.46,r:.22,i:.82},{x:.24,y:.58,r:.18,i:.6},{x:.72,y:.2,r:.13,i:.44}]);
+      drawMap('c2',[{x:.5,y:.44,r:.32,i:.88},{x:.28,y:.62,r:.2,i:.55}]);
+      drawClub('cvc');
+      animVs();
+    }
+    setTimeout(init, 150);
+    window.addEventListener('resize', init);
+  </script>
+</body>
+</html>
