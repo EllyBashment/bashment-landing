@@ -8,215 +8,350 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    :root {
-      --gold: #f5a623; --gold-bright: #ffcc55; --gold-deep: #c17d10;
-      --amber: #e8820c; --ember: #ff6b35; --cream: #f0e6cc;
-      --mist: rgba(240,230,204,0.55); --dim: rgba(240,230,204,0.32);
-      --bg: #080608; --border: rgba(245,166,35,0.18); --border-bright: rgba(245,166,35,0.4);
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    :root{
+      --gold:#f5a623;--gold-b:#ffcc55;--gold-d:#c17d10;
+      --amber:#e8820c;--cream:#f0e6cc;
+      --bg:#08060a;--s1:#121016;--s2:#1a1620;
+      --bdr:rgba(245,166,35,0.15);--bdr2:rgba(255,255,255,0.08);
+      --mist:rgba(240,230,204,0.55);--dim:rgba(240,230,204,0.3);
+      --green:#00e676;--font-d:'Sora',sans-serif;--font-b:'Space Grotesk',sans-serif;
     }
-    body { background: var(--bg); color: var(--cream); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+    body{background:var(--bg);color:var(--cream);font-family:var(--font-b);overflow-x:hidden;}
+    ::-webkit-scrollbar{width:3px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:2px;}
 
-    .city-bg {
-      position: fixed; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 120% 80% at 50% 100%, #2a1500 0%, #140a00 35%, #080608 70%);
-      overflow: hidden;
-    }
-    .city-bg::before {
-      content: ''; position: absolute; inset: 0;
-      background:
-        radial-gradient(circle 3px at 12% 78%, rgba(255,180,60,0.9) 0%, transparent 4px),
-        radial-gradient(circle 5px at 18% 82%, rgba(255,140,30,0.7) 0%, transparent 8px),
-        radial-gradient(circle 2px at 25% 75%, rgba(255,200,80,0.8) 0%, transparent 3px),
-        radial-gradient(circle 4px at 32% 85%, rgba(255,120,20,0.6) 0%, transparent 6px),
-        radial-gradient(circle 3px at 40% 79%, rgba(255,180,60,0.7) 0%, transparent 5px),
-        radial-gradient(circle 6px at 48% 88%, rgba(255,150,40,0.5) 0%, transparent 10px),
-        radial-gradient(circle 2px at 55% 76%, rgba(255,200,90,0.8) 0%, transparent 4px),
-        radial-gradient(circle 4px at 62% 83%, rgba(255,130,25,0.6) 0%, transparent 7px),
-        radial-gradient(circle 3px at 70% 80%, rgba(255,180,60,0.7) 0%, transparent 5px),
-        radial-gradient(circle 5px at 78% 86%, rgba(255,110,20,0.5) 0%, transparent 8px),
-        radial-gradient(circle 2px at 85% 77%, rgba(255,200,80,0.8) 0%, transparent 3px),
-        radial-gradient(circle 4px at 92% 84%, rgba(255,160,45,0.6) 0%, transparent 6px),
-        radial-gradient(circle 8px at 15% 88%, rgba(255,120,30,0.35) 0%, transparent 20px),
-        radial-gradient(circle 10px at 35% 91%, rgba(255,100,20,0.3) 0%, transparent 25px),
-        radial-gradient(circle 12px at 60% 90%, rgba(255,130,35,0.28) 0%, transparent 30px),
-        radial-gradient(circle 8px at 80% 89%, rgba(255,110,25,0.32) 0%, transparent 20px),
-        radial-gradient(circle 3px at 8% 72%, rgba(255,180,60,0.6) 0%, transparent 5px),
-        radial-gradient(circle 2px at 22% 68%, rgba(255,200,80,0.5) 0%, transparent 3px),
-        radial-gradient(circle 4px at 45% 70%, rgba(255,150,40,0.55) 0%, transparent 6px),
-        radial-gradient(circle 3px at 68% 73%, rgba(255,180,60,0.6) 0%, transparent 5px),
-        radial-gradient(circle 2px at 88% 69%, rgba(255,200,90,0.5) 0%, transparent 3px);
-    }
-    .city-bg::after {
-      content: ''; position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 60% 40% at 20% 95%, rgba(255,120,20,0.22) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 35% at 50% 98%, rgba(255,140,30,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 80% 95%, rgba(255,100,15,0.2) 0%, transparent 60%),
-        radial-gradient(ellipse 100% 25% at 50% 100%, rgba(180,80,0,0.35) 0%, transparent 70%);
-    }
-    .top-fade {
-      position: fixed; top: 0; left: 0; right: 0; height: 200px;
-      background: linear-gradient(to bottom, rgba(8,6,8,1) 0%, transparent 100%);
-      z-index: 1; pointer-events: none;
-    }
-    ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--gold-deep); border-radius: 2px; }
+    .city-bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 120% 80% at 50% 100%,#2a1500 0%,#140a00 35%,#080608 70%);overflow:hidden;pointer-events:none;}
+    .city-bg::before{content:'';position:absolute;inset:0;background:
+      radial-gradient(circle 3px at 12% 78%,rgba(255,180,60,.9) 0%,transparent 4px),
+      radial-gradient(circle 5px at 18% 82%,rgba(255,140,30,.7) 0%,transparent 8px),
+      radial-gradient(circle 2px at 25% 75%,rgba(255,200,80,.8) 0%,transparent 3px),
+      radial-gradient(circle 4px at 32% 85%,rgba(255,120,20,.6) 0%,transparent 6px),
+      radial-gradient(circle 3px at 40% 79%,rgba(255,180,60,.7) 0%,transparent 5px),
+      radial-gradient(circle 6px at 48% 88%,rgba(255,150,40,.5) 0%,transparent 10px),
+      radial-gradient(circle 2px at 55% 76%,rgba(255,200,90,.8) 0%,transparent 4px),
+      radial-gradient(circle 4px at 62% 83%,rgba(255,130,25,.6) 0%,transparent 7px),
+      radial-gradient(circle 3px at 70% 80%,rgba(255,180,60,.7) 0%,transparent 5px),
+      radial-gradient(circle 5px at 78% 86%,rgba(255,110,20,.5) 0%,transparent 8px),
+      radial-gradient(circle 2px at 85% 77%,rgba(255,200,80,.8) 0%,transparent 3px),
+      radial-gradient(circle 4px at 92% 84%,rgba(255,160,45,.6) 0%,transparent 6px),
+      radial-gradient(circle 8px at 15% 88%,rgba(255,120,30,.3) 0%,transparent 20px),
+      radial-gradient(circle 10px at 35% 91%,rgba(255,100,20,.25) 0%,transparent 25px),
+      radial-gradient(circle 12px at 60% 90%,rgba(255,130,35,.22) 0%,transparent 30px),
+      radial-gradient(circle 8px at 80% 89%,rgba(255,110,25,.28) 0%,transparent 20px),
+      radial-gradient(ellipse 60% 40% at 20% 95%,rgba(255,120,20,.2) 0%,transparent 60%),
+      radial-gradient(ellipse 50% 35% at 50% 98%,rgba(255,140,30,.16) 0%,transparent 55%),
+      radial-gradient(ellipse 60% 40% at 80% 95%,rgba(255,100,15,.18) 0%,transparent 60%),
+      radial-gradient(ellipse 100% 25% at 50% 100%,rgba(180,80,0,.32) 0%,transparent 70%);}
+    .top-fade{position:fixed;top:0;left:0;right:0;height:180px;background:linear-gradient(to bottom,rgba(8,6,8,1),transparent);z-index:1;pointer-events:none;}
+    .page{position:relative;z-index:2;}
 
-    .page { position: relative; z-index: 2; }
+    /* Nav */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,6,8,0.6);backdrop-filter:blur(20px);border-bottom:0.5px solid rgba(255,255,255,0.04);}
+    .nav-logo{font-family:var(--font-d);font-weight:800;font-size:1.4rem;color:#fff;letter-spacing:-0.03em;text-decoration:none;}
+    .nav-logo span{color:var(--gold);}
+    .nav-links{display:flex;align-items:center;gap:36px;}
+    .nav-links a{font-size:0.8rem;color:var(--mist);text-decoration:none;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.25s;font-weight:500;}
+    .nav-links a:hover{color:var(--gold);}
+    .btn-primary{background:var(--gold);color:#0a0600;font-family:var(--font-d);font-weight:700;font-size:0.82rem;padding:10px 24px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.25s;box-shadow:0 0 24px rgba(245,166,35,.3);}
+    .btn-primary:hover{background:var(--gold-b);box-shadow:0 0 40px rgba(245,166,35,.55);transform:translateY(-1px);}
+    .btn-outline{background:transparent;color:var(--gold);border:1px solid var(--bdr);font-family:var(--font-d);font-weight:600;font-size:0.82rem;padding:10px 24px;border-radius:100px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.25s;}
+    .btn-outline:hover{background:rgba(245,166,35,.08);border-color:var(--gold);}
+    #hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--cream);}
+    #mob-menu{display:none;position:fixed;top:68px;left:0;right:0;z-index:99;background:rgba(8,6,8,.97);padding:24px;border-bottom:1px solid var(--bdr);flex-direction:column;gap:4px;}
+    #mob-menu.open{display:flex;}
+    #mob-menu a{color:var(--mist);text-decoration:none;font-size:.9rem;display:block;padding:10px 0;border-bottom:1px solid rgba(245,166,35,.06);}
 
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 20px 48px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.4rem; color: #fff; letter-spacing: -0.03em; }
-    .nav-logo span { color: var(--gold); }
-    .nav-links { display: flex; align-items: center; gap: 36px; }
-    .nav-links a { font-size: 0.82rem; color: var(--mist); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.25s; }
-    .nav-links a:hover { color: var(--gold); }
-    .btn-primary { background: var(--gold); color: #0a0600; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.82rem; padding: 10px 24px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.25s; box-shadow: 0 0 24px rgba(245,166,35,0.35); }
-    .btn-primary:hover { background: var(--gold-bright); box-shadow: 0 0 40px rgba(245,166,35,0.6); transform: translateY(-1px); }
-    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--border-bright); font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 0.82rem; padding: 10px 24px; border-radius: 100px; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.25s; }
-    .btn-outline:hover { background: rgba(245,166,35,0.1); }
-    #hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--cream); }
+    section{padding:100px 24px;}
+    .section-inner{max-width:1200px;margin:0 auto;}
+    .section-label{font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+    .section-title{font-family:var(--font-d);font-weight:800;font-size:clamp(2.2rem,4vw,3.6rem);line-height:1.06;letter-spacing:-.03em;color:#fff;margin-bottom:20px;}
+    .section-title em{font-style:normal;color:var(--gold);}
+    .section-body{font-size:1rem;font-weight:400;color:var(--mist);line-height:1.8;max-width:540px;}
 
-    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 24px 80px; }
-    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); border-radius: 100px; padding: 6px 16px; font-size: 0.72rem; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 32px; }
-    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    .hero-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.6rem,6vw,5.8rem); line-height: 1.0; letter-spacing: -0.04em; color: #fff; margin-bottom: 20px; }
-    .hero-title em { font-style: normal; color: var(--gold); letter-spacing: -0.04em; }
-    .hero-sub { font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.95rem,1.8vw,1.25rem); color: var(--mist); margin-bottom: 28px; font-weight: 400; line-height: 1.7; max-width: 580px; }
-    .hero-body { font-size: 0.95rem; font-weight: 300; color: var(--dim); max-width: 520px; line-height: 1.8; margin-bottom: 44px; }
-    .hero-ctas { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
-    .avatar-cluster { display: flex; }
-    .avatar-cluster .av { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #0e0c10; margin-left: -8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #0a0600; flex-shrink: 0; }
-    .avatar-cluster .av:first-child { margin-left: 0; }
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s ease,transform .75s ease;}
+    .reveal.in{opacity:1;transform:none;}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}
 
-    .ticker { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 0; background: rgba(245,166,35,0.02); }
-    .ticker-track { display: flex; gap: 0; animation: tick 30s linear infinite; white-space: nowrap; }
-    @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .ticker-item { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-deep); padding: 0 32px; }
-    .ticker-sep { color: var(--gold); opacity: 0.4; }
+    /* Hero */
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:100px;padding:6px 16px;font-size:.72rem;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px;}
+    .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero-title{font-family:var(--font-d);font-weight:800;font-size:clamp(2.8rem,6.5vw,6rem);line-height:1.0;letter-spacing:-.04em;color:#fff;margin-bottom:20px;}
+    .hero-title em{font-style:normal;color:var(--gold);}
+    .hero-sub{font-family:var(--font-b);font-size:clamp(.95rem,1.8vw,1.25rem);color:var(--mist);margin-bottom:28px;font-weight:400;line-height:1.7;max-width:580px;}
+    .hero-body{font-size:.95rem;font-weight:300;color:var(--dim);max-width:500px;line-height:1.8;margin-bottom:44px;}
+    .hero-ctas{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;}
+    .av-row{display:flex;}
+    .av{width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0600;flex-shrink:0;}
+    .av:first-child{margin-left:0;}
 
-    section { padding: 100px 24px; }
-    .section-inner { max-width: 1200px; margin: 0 auto; }
-    .section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
-    .section-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2rem,3.8vw,3.4rem); line-height: 1.06; letter-spacing: -0.03em; color: #fff; margin-bottom: 20px; }
-    .section-title em { font-style: normal; color: var(--gold); letter-spacing: -0.03em; }
-    .section-body { font-size: 1rem; font-weight: 400; color: var(--mist); line-height: 1.8; max-width: 540px; }
-
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
-    .reveal.in { opacity: 1; transform: none; }
-    .d1{transition-delay:.08s} .d2{transition-delay:.18s} .d3{transition-delay:.28s} .d4{transition-delay:.38s} .d5{transition-delay:.48s}
-
-    /* Phone */
-    .phone { width: 200px; border-radius: 32px; background: #0e0c10; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.05) inset; overflow: hidden; flex-shrink: 0; position: relative; }
-    .phone-center { width: 224px; border-radius: 36px; box-shadow: 0 60px 120px rgba(0,0,0,0.9), 0 0 60px rgba(245,166,35,0.14), 0 0 0 0.5px rgba(255,255,255,0.07) inset; }
-    .phone-statusbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 4px; font-size: 9px; color: rgba(255,255,255,0.5); }
-    .pnav { background: #0e0c10; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; padding: 8px 0 10px; }
-    .pnav-item { text-align: center; }
-    .pnav-item .pi { font-size: 14px; }
-    .pnav-item .pl { font-size: 7px; color: rgba(255,255,255,0.3); }
-    .pnav-item.active .pl { color: var(--gold); }
+    /* Ticker */
+    .ticker{overflow:hidden;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:14px 0;background:rgba(245,166,35,.02);}
+    .ticker-track{display:flex;animation:tick 30s linear infinite;white-space:nowrap;}
+    @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .ticker-item{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-d);padding:0 32px;}
+    .ticker-sep{color:var(--gold);opacity:.4;}
 
     /* Walkthrough */
-    .walkthrough-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 14px; padding: 40px 0 20px; overflow-x: auto; scrollbar-width: none; }
-    .walkthrough-wrap::-webkit-scrollbar { display: none; }
-    .walkthrough-step { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-    .walkthrough-caption { font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--cream); text-align: center; max-width: 150px; line-height: 1.4; letter-spacing: -0.01em; }
+    .walkthrough-wrap{display:flex;align-items:flex-end;justify-content:center;gap:14px;padding:40px 0 20px;overflow-x:auto;scrollbar-width:none;}
+    .walkthrough-wrap::-webkit-scrollbar{display:none;}
+    .walkthrough-step{display:flex;flex-direction:column;align-items:center;gap:18px;}
+    .walkthrough-caption{font-family:var(--font-d);font-size:.88rem;font-weight:700;color:var(--cream);text-align:center;max-width:150px;line-height:1.4;}
+
+    /* Phone */
+    .phone{width:200px;border-radius:32px;background:#0e0c10;border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 80px rgba(0,0,0,.7),0 0 0 .5px rgba(255,255,255,.05) inset;overflow:hidden;flex-shrink:0;position:relative;}
+    .phone-center{width:224px;border-radius:36px;box-shadow:0 60px 120px rgba(0,0,0,.9),0 0 60px rgba(245,166,35,.12),0 0 0 .5px rgba(255,255,255,.07) inset;}
+    .pnav{background:#0e0c10;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-around;padding:8px 0 10px;}
+    .pnav-item{text-align:center;}
+    .pnav-label{font-size:7px;color:rgba(255,255,255,.3);}
+    .pnav-label.active{color:var(--gold);}
+    .pbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 6px;font-size:9px;color:rgba(255,255,255,.5);}
 
     /* Features */
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: 24px; overflow: hidden; margin-top: 60px; }
-    .feat-card { background: rgba(255,255,255,0.025); padding: 36px 32px; border: 0.5px solid var(--border); transition: background 0.3s; position: relative; overflow: hidden; }
-    .feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent); opacity: 0; transition: opacity 0.3s; }
-    .feat-card:hover { background: rgba(245,166,35,0.04); }
-    .feat-card:hover::before { opacity: 1; }
-    .feat-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 20px; }
-    .feat-title { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -0.02em; }
-    .feat-body { font-size: 0.875rem; font-weight: 400; color: var(--mist); line-height: 1.75; }
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border:1px solid var(--bdr);border-radius:24px;overflow:hidden;margin-top:60px;}
+    .feat-card{background:rgba(255,255,255,.025);padding:36px 32px;border:.5px solid var(--bdr);transition:background .3s;position:relative;overflow:hidden;}
+    .feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.3),transparent);opacity:0;transition:opacity .3s;}
+    .feat-card:hover{background:rgba(245,166,35,.04);}
+    .feat-card:hover::before{opacity:1;}
+    .feat-icon{width:44px;height:44px;border-radius:12px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+    .feat-icon svg{display:block;}
+    .feat-title{font-family:var(--font-d);font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:-.02em;}
+    .feat-body{font-size:.875rem;font-weight:400;color:var(--mist);line-height:1.75;}
 
     /* Stats */
-    .stats-row { display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
-    .stat { flex: 1; padding: 36px 24px; text-align: center; border-right: 1px solid var(--border); }
-    .stat:last-child { border-right: none; }
-    .stat-num { font-family: 'Sora', sans-serif; font-size: 2.8rem; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 6px; letter-spacing: -0.04em; }
-    .stat-label { font-size: 0.78rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; }
+    .stats-row{display:flex;border:1px solid var(--bdr);border-radius:20px;overflow:hidden;}
+    .stat{flex:1;padding:36px 24px;text-align:center;border-right:1px solid var(--bdr);}
+    .stat:last-child{border-right:none;}
+    .stat-num{font-family:var(--font-d);font-size:2.8rem;font-weight:800;color:var(--gold);line-height:1;margin-bottom:6px;letter-spacing:-.04em;}
+    .stat-label{font-size:.78rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;}
 
     /* Testimonials */
-    .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 60px; }
-    .testi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 28px; transition: border-color 0.3s; }
-    .testi-card:hover { border-color: rgba(245,166,35,0.3); }
-    .testi-stars { color: var(--gold); font-size: 12px; letter-spacing: 2px; margin-bottom: 16px; }
-    .testi-text { font-size: 0.9rem; font-weight: 400; color: var(--mist); line-height: 1.8; margin-bottom: 20px; }
-    .testi-author { display: flex; align-items: center; gap: 12px; }
-    .testi-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #0a0600; background: var(--gold); flex-shrink: 0; }
-    .testi-name { font-size: 0.82rem; font-weight: 600; color: var(--cream); }
-    .testi-handle { font-size: 0.75rem; color: var(--dim); }
+    .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:60px;}
+    .testi-card{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:20px;padding:28px;transition:border-color .3s;}
+    .testi-card:hover{border-color:rgba(245,166,35,.3);}
+    .testi-stars{color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:16px;}
+    .testi-text{font-size:.9rem;font-weight:300;color:var(--mist);line-height:1.8;margin-bottom:20px;}
+    .testi-author{display:flex;align-items:center;gap:12px;}
+    .testi-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#0a0600;background:var(--gold);flex-shrink:0;}
+    .testi-name{font-size:.82rem;font-weight:600;color:var(--cream);}
+    .testi-handle{font-size:.75rem;color:var(--dim);}
 
-    /* CTA */
-    .cta-section { text-align: center; padding: 120px 24px; }
-    .email-row { display: flex; gap: 10px; max-width: 460px; margin: 40px auto 0; }
-    .email-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(245,166,35,0.2); border-radius: 100px; padding: 14px 24px; color: var(--cream); font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.25s; }
-    .email-input::placeholder { color: var(--dim); }
-    .email-input:focus { border-color: rgba(245,166,35,0.55); }
-    .trust-row { display: flex; justify-content: center; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
-    .trust-item { font-size: 0.75rem; color: var(--dim); display: flex; align-items: center; gap: 6px; }
-    .trust-item span { color: var(--gold); }
+    /* Signup form */
+    .signup-section{padding:120px 24px;position:relative;overflow:hidden;}
+    .signup-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(245,166,35,.06),transparent);pointer-events:none;}
+    .form-card{background:rgba(255,255,255,.03);border:1px solid rgba(245,166,35,.22);border-radius:28px;padding:48px 44px;backdrop-filter:blur(8px);max-width:720px;margin:0 auto;}
+    .form-label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+    .form-input{background:rgba(255,255,255,.05);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:15px 20px;color:var(--cream);font-family:var(--font-b);font-size:.95rem;outline:none;transition:border-color .25s;width:100%;}
+    .form-input:focus{border-color:rgba(245,166,35,.55);}
+    .form-input::placeholder{color:var(--dim);}
+    select.form-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(240,230,204,0.3)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+    select.form-input option{background:var(--s2);}
+    .genre-wrap{display:flex;flex-wrap:wrap;gap:8px;}
+    .gtag{display:inline-flex;align-items:center;padding:7px 14px;border-radius:100px;font-size:.82rem;font-weight:500;color:var(--mist);background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);cursor:pointer;transition:all .2s;user-select:none;}
+    .gtag:hover{background:rgba(245,166,35,.14);border-color:rgba(245,166,35,.38);color:var(--cream);}
+    .gtag.active{background:rgba(245,166,35,.22);border-color:rgba(245,166,35,.55);color:var(--gold);font-weight:600;}
+    .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(245,166,35,.1);}
+    .trust-item{font-size:.75rem;color:var(--dim);display:flex;align-items:center;gap:6px;}
+    .trust-check{color:var(--gold);}
+    .form-divider{height:.5px;background:rgba(245,166,35,.1);margin:20px 0;}
+    .step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:28px;}
+    .step-dot-f{width:8px;height:8px;border-radius:50%;background:rgba(245,166,35,.3);}
+    .step-dot-f.active{background:var(--gold);width:24px;border-radius:4px;}
 
-    footer { border-top: 1px solid var(--border); padding: 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-    .footer-logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff; letter-spacing: -0.03em; }
-    .footer-logo span { color: var(--gold); }
-    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
-    .footer-links a { font-size: 0.78rem; color: var(--dim); text-decoration: none; transition: color 0.2s; text-transform: uppercase; letter-spacing: 0.06em; }
-    .footer-links a:hover { color: var(--gold); }
-    .footer-copy { font-size: 0.72rem; color: var(--dim); }
+    /* Phone input row */
+    .phone-input-row{display:flex;gap:8px;align-items:stretch;}
+    .dial-select{width:96px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:15px 10px 15px 14px;color:var(--cream);font-family:var(--font-b);font-size:.88rem;outline:none;transition:border-color .25s;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='rgba(240,230,204,0.3)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+    .dial-select:focus{border-color:rgba(245,166,35,.55);}
+    .dial-select option{background:var(--s2);}
 
-    @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      #hamburger { display: block; }
-      .stats-row { flex-direction: column; }
-      .stat { border-right: none; border-bottom: 1px solid var(--border); }
-      .stat:last-child { border-bottom: none; }
-      footer { flex-direction: column; text-align: center; padding: 32px 24px; }
-      .footer-links { justify-content: center; }
-      .email-row { flex-direction: column; }
-      .walkthrough-wrap { justify-content: flex-start; }
+    #step-success,#step-error{display:none;text-align:center;padding:20px 0;}
+    .success-icon{width:52px;height:52px;border-radius:50%;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+    .err-msg{display:none;color:#ff7a7a;font-size:.8rem;margin-top:8px;}
+
+    /* Live / trending badges */
+    .live-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(210,30,50,.88);border-radius:5px;padding:2px 7px;font-size:8px;font-weight:700;color:#fff;letter-spacing:.06em;}
+    .live-dot-r{width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 2s ease-in-out infinite;}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;display:inline-block;}
+    /* Trending badge — text-only, no fire emoji */
+    .trending-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,80,20,.15);border:1px solid rgba(255,80,20,.35);border-radius:6px;padding:2px 8px;font-size:8px;font-weight:700;color:#ff6030;letter-spacing:.06em;text-transform:uppercase;}
+    .trending-arrow{display:inline-block;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:5px solid #ff6030;}
+
+    .prog{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:2px;}
+
+    .crowd-chart{display:flex;gap:3px;align-items:flex-end;height:36px;}
+    .crowd-bar{flex:1;border-radius:3px 3px 0 0;}
+
+    .ngc-pill{display:inline-flex;align-items:center;gap:10px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-radius:100px;padding:10px 24px;}
+    .ngc-icon{width:8px;height:8px;border-radius:50%;background:var(--gold);}
+
+    /* ── IN-APP NAVIGATION MODAL ── */
+    .nav-modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+    .nav-modal-overlay.open{display:flex;}
+    .nav-modal{background:#0e0c12;border:1px solid rgba(245,166,35,.22);border-radius:28px 28px 0 0;width:100%;max-width:500px;padding:28px 24px 32px;position:relative;max-height:92vh;overflow-y:auto;}
+    .nav-modal-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin:0 auto 20px;}
+    .nav-modal-title{font-family:var(--font-d);font-size:1.05rem;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:4px;}
+    .nav-modal-sub{font-size:.78rem;color:var(--mist);margin-bottom:18px;}
+    /* Mini map area */
+    .nav-map-area{width:100%;height:200px;border-radius:16px;background:#0a0a10;border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;margin-bottom:16px;}
+    .nav-map-area canvas{position:absolute;inset:0;width:100%;height:100%;}
+    .nav-map-overlay{position:absolute;inset:0;pointer-events:none;}
+    /* Route info strip */
+    .route-strip{display:flex;gap:8px;margin-bottom:16px;}
+    .route-chip{flex:1;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.18);border-radius:12px;padding:10px 12px;text-align:center;}
+    .route-chip-val{font-family:var(--font-d);font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-.03em;}
+    .route-chip-label{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+    /* Travel mode toggle */
+    .travel-modes{display:flex;gap:8px;margin-bottom:16px;}
+    .travel-mode-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:all .2s;color:var(--mist);font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+    .travel-mode-btn.active{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.4);color:var(--gold);}
+    .travel-mode-btn svg{display:block;}
+    /* Navigation actions */
+    .nav-actions{display:flex;gap:8px;margin-bottom:12px;}
+    .btn-nav-start{flex:1;background:var(--gold);color:#0a0600;font-family:var(--font-d);font-weight:700;font-size:.9rem;padding:14px;border-radius:14px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+    .btn-nav-start:hover{background:var(--gold-b);}
+    .btn-nav-ext{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--mist);font-family:var(--font-d);font-weight:600;font-size:.78rem;padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+    .btn-nav-ext:hover{background:rgba(255,255,255,.08);}
+    /* Live navigation HUD */
+    .nav-hud{display:none;background:rgba(8,6,10,.96);border:1px solid rgba(245,166,35,.25);border-radius:16px;padding:14px 16px;margin-bottom:12px;}
+    .nav-hud.active{display:block;}
+    .nav-hud-row{display:flex;align-items:center;justify-content:space-between;}
+    .nav-hud-eta{font-family:var(--font-d);font-size:1.5rem;font-weight:800;color:var(--gold);letter-spacing:-.04em;}
+    .nav-hud-dist{font-size:.8rem;color:var(--mist);}
+    .nav-hud-label{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+    .nav-status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;display:inline-block;margin-right:6px;}
+    /* Location permission error */
+    .nav-loc-err{display:none;background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.2);border-radius:12px;padding:10px 14px;font-size:.8rem;color:#ff9a9a;margin-bottom:12px;}
+
+    footer{border-top:1px solid var(--bdr);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+    .footer-logo{font-family:var(--font-d);font-weight:800;font-size:1.3rem;color:#fff;letter-spacing:-.03em;}
+    .footer-logo span{color:var(--gold);}
+    .footer-links{display:flex;gap:28px;flex-wrap:wrap;}
+    .footer-links a{font-size:.78rem;color:var(--dim);text-decoration:none;transition:color .2s;text-transform:uppercase;letter-spacing:.06em;}
+    .footer-links a:hover{color:var(--gold);}
+    .footer-copy{font-size:.72rem;color:var(--dim);}
+
+    @media(max-width:768px){
+      nav{padding:16px 24px;}
+      .nav-links{display:none;}
+      #hamburger{display:block;}
+      .stats-row{flex-direction:column;}
+      .stat{border-right:none;border-bottom:1px solid var(--bdr);}
+      .stat:last-child{border-bottom:none;}
+      footer{flex-direction:column;text-align:center;padding:32px 24px;}
+      .footer-links{justify-content:center;}
+      .form-card{padding:28px 20px;}
+      .walkthrough-wrap{justify-content:flex-start;}
     }
-
-    #mob-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: rgba(8,6,8,0.97); padding: 24px; border-bottom: 1px solid var(--border); flex-direction: column; gap: 4px; }
-    #mob-menu.open { display: flex; }
-    #mob-menu a { color: var(--mist); text-decoration: none; font-size: 0.9rem; display: block; padding: 10px 0; border-bottom: 1px solid rgba(245,166,35,0.07); }
-
-    .popup-card { background: rgba(14,12,16,0.97); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; }
-    .pin-btn { background: var(--gold); color: #0a0600; border: none; border-radius: 8px; padding: 6px 0; width: 100%; font-size: 10px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 8px; }
-
-    /* Genre tags */
-    .gtag {
-      display: inline-block;
-      padding: 7px 14px;
-      border-radius: 100px;
-      font-size: 0.82rem;
-      font-weight: 400;
-      color: var(--mist);
-      background: rgba(245,166,35,0.08);
-      border: 1px solid rgba(245,166,35,0.2);
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .gtag:hover { background: rgba(245,166,35,0.15); border-color: rgba(245,166,35,0.4); color: var(--cream); }
   </style>
 </head>
 <body>
   <div class="city-bg"></div>
   <div class="top-fade"></div>
 
+  <!-- ── IN-APP NAVIGATION MODAL ── -->
+  <div class="nav-modal-overlay" id="navModal">
+    <div class="nav-modal">
+      <div class="nav-modal-handle"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+        <div>
+          <div class="nav-modal-title" id="navModalTitle">Directions to Lotus Lounge</div>
+          <div class="nav-modal-sub" id="navModalSub">123 City Road · 0.8 mi away</div>
+        </div>
+        <button onclick="closeNavModal()" style="background:rgba(255,255,255,.07);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--mist);flex-shrink:0;margin-top:2px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Location permission error -->
+      <div class="nav-loc-err" id="navLocErr">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Location access denied. Enable location in your browser settings to use navigation.
+      </div>
+
+      <!-- Live navigation HUD -->
+      <div class="nav-hud" id="navHud">
+        <div class="nav-hud-row">
+          <div>
+            <div class="nav-hud-eta" id="hudEta">— min</div>
+            <div class="nav-hud-label">ETA</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="nav-hud-dist" id="hudDist">—</div>
+            <div class="nav-hud-label">Remaining</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:.72rem;color:var(--green);font-weight:600;">
+            <span class="nav-status-dot"></span>Live
+          </div>
+        </div>
+        <div style="margin-top:10px;height:2px;background:rgba(255,255,255,.06);border-radius:1px;"><div id="hudProgress" style="height:100%;background:var(--green);border-radius:1px;width:0%;transition:width 0.5s;"></div></div>
+        <div style="margin-top:8px;font-size:.75rem;color:var(--mist);" id="hudNextStep">Head toward destination</div>
+      </div>
+
+      <!-- Mini map -->
+      <div class="nav-map-area" id="navMapArea">
+        <canvas id="navCanvas"></canvas>
+        <div class="nav-map-overlay" id="navMapOverlay"></div>
+        <div style="position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.7);border-radius:8px;padding:4px 10px;font-size:9px;color:rgba(255,255,255,.6);" id="navMapStatus">Detecting location…</div>
+      </div>
+
+      <!-- Route info chips -->
+      <div class="route-strip">
+        <div class="route-chip">
+          <div class="route-chip-val" id="routeTime">—</div>
+          <div class="route-chip-label">Est. Time</div>
+        </div>
+        <div class="route-chip">
+          <div class="route-chip-val" id="routeDist">—</div>
+          <div class="route-chip-label">Distance</div>
+        </div>
+        <div class="route-chip">
+          <div class="route-chip-val" id="routeArrival">—</div>
+          <div class="route-chip-label">Arrival</div>
+        </div>
+      </div>
+
+      <!-- Travel mode toggle -->
+      <div class="travel-modes">
+        <button class="travel-mode-btn active" onclick="setTravelMode('driving',this)" id="mode-driving">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="8" width="22" height="12" rx="2"/><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+          Drive
+        </button>
+        <button class="travel-mode-btn" onclick="setTravelMode('walking',this)" id="mode-walking">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><path d="M8 22l2-8 2 4 2-4 2 8"/><path d="M7 12l1-6 4 2 4-2 1 6"/></svg>
+          Walk
+        </button>
+        <button class="travel-mode-btn" onclick="setTravelMode('transit',this)" id="mode-transit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="14" rx="3"/><path d="M4 11h16"/><circle cx="9" cy="17" r="2"/><circle cx="15" cy="17" r="2"/><path d="M9 19H7m10 0h-2"/></svg>
+          Transit
+        </button>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="nav-actions">
+        <button class="btn-nav-start" id="btnStartNav" onclick="startLiveNavigation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Navigation
+        </button>
+        <button class="btn-nav-ext" onclick="openInMaps()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open in Maps
+        </button>
+      </div>
+
+      <div style="font-size:.72rem;color:var(--dim);text-align:center;line-height:1.5;">
+        Route provided by Mapbox Directions. Real-time tracking active while navigating.
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
   <nav>
-    <div class="nav-logo">Bash<span>ment</span></div>
+    <a href="#" class="nav-logo">Bash<span>ment</span></a>
     <div class="nav-links">
       <a href="#walkthrough">How It Works</a>
       <a href="#features">Features</a>
@@ -227,36 +362,35 @@
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="2" y1="6" x2="20" y2="6"/><line x1="2" y1="12" x2="20" y2="12"/><line x1="2" y1="18" x2="20" y2="18"/></svg>
     </button>
   </nav>
-
   <div id="mob-menu">
     <a href="#walkthrough">How It Works</a>
     <a href="#features">Features</a>
     <a href="#social">Community</a>
-    <a href="#signup" class="btn-primary" style="margin-top:12px;text-align:center;border-radius:100px;">Join Beta</a>
+    <a href="#signup" class="btn-primary" style="margin-top:12px;text-align:center;border-radius:100px;justify-content:center;">Join Beta</a>
   </div>
 
   <div class="page">
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-eyebrow reveal"><div class="hero-eyebrow-dot"></div>Early Access — Limited Spots</div>
+      <div class="hero-eyebrow reveal"><div class="hero-dot"></div>Early Access — Limited Spots</div>
       <h1 class="hero-title reveal d1">The Operating System<br/>for <em>Nightlife & Culture.</em></h1>
-      <p class="hero-sub reveal d2">Bashment helps event promoters predict attendance,<br/>optimise marketing, and increase revenue using real-time data.</p>
-      <p class="hero-body reveal d3">Live heat maps, Vibe Scores, and crowd intelligence — built for promoters who want to fill rooms, and patrons who want to find them. Your city's nightlife, powered by real data.</p>
+      <p class="hero-sub reveal d2">Bashment helps event promoters predict attendance, optimise marketing, and increase revenue using real-time data.</p>
+      <p class="hero-body reveal d3">Live heat maps, Vibe Scores, and crowd intelligence — built for promoters who want to fill rooms, and patrons who want to find them.</p>
       <div class="hero-ctas reveal d4">
         <a href="#signup" class="btn-primary">Join Beta</a>
         <a href="#walkthrough" class="btn-outline">See How It Works</a>
       </div>
       <div class="reveal d5" style="margin-top:32px;display:flex;align-items:center;gap:12px;justify-content:center;">
-        <div class="avatar-cluster">
+        <div class="av-row">
           <div class="av" style="background:#d4a843;">AK</div>
           <div class="av" style="background:#c8895c;">JT</div>
           <div class="av" style="background:#b87333;">SC</div>
           <div class="av" style="background:#d4963a;">MR</div>
         </div>
         <div>
-          <div style="font-size:0.78rem;font-weight:500;color:var(--cream);">50,000+ on the beta list</div>
-          <div style="font-size:0.7rem;color:var(--dim);">Launching in 12 cities</div>
+          <div style="font-size:.78rem;font-weight:500;color:var(--cream);">50,000+ on the beta list</div>
+          <div style="font-size:.7rem;color:var(--dim);">Launching in 12 cities</div>
         </div>
       </div>
     </section>
@@ -269,20 +403,20 @@
         <span class="ticker-item">Deep House</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Amapiano</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Hip-Hop</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Reggae / Dancehall</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Jazz Nights</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Rooftop Parties</span><span class="ticker-sep"> · </span>
-        <span class="ticker-item">Warehouse Raves</span><span class="ticker-sep"> · </span>
-        <span class="ticker-item">Live Bands</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">R&amp;B</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Bashment</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Afrobeats</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Techno</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Deep House</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Amapiano</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Hip-Hop</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">Reggae / Dancehall</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Jazz Nights</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Rooftop Parties</span><span class="ticker-sep"> · </span>
-        <span class="ticker-item">Warehouse Raves</span><span class="ticker-sep"> · </span>
-        <span class="ticker-item">Live Bands</span><span class="ticker-sep"> · </span>
+        <span class="ticker-item">R&amp;B</span><span class="ticker-sep"> · </span>
         <span class="ticker-item">Bashment</span><span class="ticker-sep"> · </span>
       </div>
     </div>
@@ -294,278 +428,250 @@
           <div class="section-label">User Journey</div>
           <h2 class="section-title" style="text-align:center;"><em>Bashment</em> — Decide Where To Go Tonight</h2>
           <p class="section-body" style="margin:0 auto;text-align:center;">
-            <span style="font-family:'Sora',sans-serif;font-weight:700;color:var(--gold);">No group chat purgatory!</span>
-            &nbsp;From heat map to dance floor in minutes. Here's how the night unfolds.
+            <span style="font-family:var(--font-d);font-weight:700;color:var(--gold);">No group chat purgatory.</span>
+            From heat map to dance floor in minutes.
           </p>
         </div>
-
         <div class="walkthrough-wrap">
-
-          <!-- Phone 1: Heat Map -->
+          <!-- Phone 1 -->
           <div class="walkthrough-step reveal d1">
             <div class="phone">
-              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div class="pbar"><span>9:41</span><span>···</span></div>
               <div style="background:#0e0a04;height:370px;position:relative;overflow:hidden;">
                 <canvas id="c1" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
                 <div style="position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;align-items:center;z-index:2;">
-                  <div style="background:rgba(0,0,0,0.7);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:4px;">
-                    <span style="font-size:8px;">📍</span>
-                    <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:500;">What's Hot Tonight</span>
+                  <div style="background:rgba(0,0,0,.7);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:4px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span style="font-size:8px;color:rgba(255,255,255,.8);font-weight:500;">What's Hot Tonight</span>
                   </div>
-                  <div style="background:rgba(245,166,35,0.18);border:1px solid rgba(245,166,35,0.3);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);">Filters</div>
+                  <div style="background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.3);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);">Filters</div>
                 </div>
-                <!-- Pins -->
-                <div style="position:absolute;left:37%;top:33%;z-index:3;transform:translate(-50%,-50%);">
-                  <div style="width:26px;height:26px;background:var(--gold);border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 0 14px rgba(245,166,35,0.8);">🎵</div>
+                <div style="position:absolute;left:38%;top:35%;z-index:3;transform:translate(-50%,-50%);">
+                  <div onclick="openNavModal('AfroBeats Thursdays @ Lotus','123 City Road')" style="width:28px;height:28px;background:var(--gold);border-radius:50%;border:2px solid #0e0c10;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(245,166,35,.7);cursor:pointer;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0600" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                  </div>
                 </div>
                 <div style="position:absolute;left:60%;top:48%;z-index:3;transform:translate(-50%,-50%);">
-                  <div style="width:22px;height:22px;background:#ff6b35;border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 0 10px rgba(255,107,53,0.7);">🥁</div>
+                  <div style="width:22px;height:22px;background:#ff6b35;border-radius:50%;border:2px solid #0e0c10;box-shadow:0 0 10px rgba(255,107,53,.6);"></div>
                 </div>
-                <div style="position:absolute;left:23%;top:57%;z-index:3;transform:translate(-50%,-50%);">
-                  <div style="width:20px;height:20px;background:#c8a028;border-radius:50%;border:2px solid #0a0600;display:flex;align-items:center;justify-content:center;font-size:8px;">🕺</div>
+                <div style="position:absolute;left:24%;top:55%;z-index:3;transform:translate(-50%,-50%);">
+                  <div style="width:20px;height:20px;background:#9b5cff;border-radius:50%;border:2px solid #0e0c10;box-shadow:0 0 10px rgba(155,92,255,.5);"></div>
                 </div>
-                <!-- Bottom cards -->
-                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(to top,rgba(0,0,0,0.92),transparent);z-index:2;display:flex;gap:5px;">
-                  <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:6px 7px;flex:1;border:1px solid rgba(245,166,35,0.15);">
-                    <div style="font-size:7px;color:var(--gold);margin-bottom:2px;">🔥 Hot Tonight</div>
-                    <div style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:500;">AfroBeats Thursdays</div>
-                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">@ Lotus</div>
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(to top,rgba(0,0,0,.92),transparent);z-index:2;display:flex;gap:5px;">
+                  <div style="background:rgba(255,255,255,.07);border:1px solid rgba(245,166,35,.15);border-radius:8px;padding:6px 7px;flex:1;">
+                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                      <!-- Trending: SVG arrow instead of fire emoji -->
+                      <div class="trending-badge"><div class="trending-arrow"></div>Hot</div>
+                    </div>
+                    <div style="font-size:8px;color:rgba(255,255,255,.8);font-weight:500;">AfroBeats Thursdays</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,.4);">@ Lotus</div>
                   </div>
-                  <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 7px;flex:1;">
-                    <div style="font-size:7px;color:rgba(255,190,60,0.8);margin-bottom:2px;">✨ Chill Vibes</div>
-                    <div style="font-size:8px;color:rgba(255,255,255,0.7);font-weight:500;">Rooftop Social</div>
-                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">@ Skybar</div>
+                  <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:6px 7px;flex:1;">
+                    <div style="font-size:7px;color:rgba(255,190,60,.8);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em;">Relaxed</div>
+                    <div style="font-size:8px;color:rgba(255,255,255,.7);font-weight:500;">Rooftop Social</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,.4);">@ Skybar</div>
                   </div>
                 </div>
               </div>
               <div class="pnav">
-                <div class="pnav-item active"><div class="pi">🗺️</div><div class="pl" style="color:var(--gold);">Map</div></div>
-                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
-                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
-                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><div class="pnav-label active">Map</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="pnav-label">Favs</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><div class="pnav-label">Circles</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="pnav-label">Wanting</div></div>
               </div>
             </div>
             <div class="walkthrough-caption">What's Hot Tonight</div>
           </div>
 
-          <!-- Phone 2: Friend pings -->
+          <!-- Phone 2 -->
           <div class="walkthrough-step reveal d2">
             <div class="phone">
-              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div class="pbar"><span>9:41</span><span>···</span></div>
               <div style="background:#0c0a0e;height:370px;position:relative;overflow:hidden;padding:10px;">
-                <div style="position:absolute;inset:0;"><canvas id="c2" style="position:absolute;inset:0;width:100%;height:60%;opacity:0.45;"></canvas></div>
-                <div class="popup-card" style="position:absolute;left:10px;right:10px;top:70px;">
+                <div style="position:absolute;inset:0;"><canvas id="c2" style="position:absolute;inset:0;width:100%;height:60%;opacity:.45;"></canvas></div>
+                <div style="position:absolute;left:10px;right:10px;top:65px;background:rgba(14,12,16,.97);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;">
                   <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                    <div class="avatar-cluster">
-                      <div class="av" style="background:#d4a843;width:22px;height:22px;font-size:8px;margin-left:0;">F</div>
-                      <div class="av" style="background:#b87333;width:22px;height:22px;font-size:8px;">A</div>
-                      <div class="av" style="background:#c8895c;width:22px;height:22px;font-size:8px;">J</div>
-                    </div>
-                    <div style="font-size:8px;color:rgba(255,255,255,0.45);">Fred + 2 pinged this</div>
+                    <div class="av-row"><div class="av" style="background:#d4a843;width:22px;height:22px;font-size:8px;margin-left:0;">F</div><div class="av" style="background:#b87333;width:22px;height:22px;font-size:8px;">A</div></div>
+                    <div style="font-size:8px;color:rgba(255,255,255,.45);">Fred + 2 pinged this</div>
                   </div>
-                  <div style="font-size:10px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays | @ Lotus</div>
-                  <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:8px;">10:00 PM – 4:00 AM</div>
-                  <div style="height:52px;border-radius:8px;background:linear-gradient(135deg,#2a1a06,#1a0c02);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px;">🎵</div>
-                  <div style="font-size:8px;color:rgba(255,255,255,0.45);margin-bottom:2px;">Early Bird: <span style="color:var(--gold);">$20</span></div>
-                  <div style="font-size:8px;color:rgba(255,255,255,0.28);margin-bottom:8px;">General Admission: $30</div>
-                  <button class="pin-btn">📍 Pin</button>
+                  <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:2px;">AfroBeats Thursdays | @ Lotus</div>
+                  <div style="font-size:8px;color:rgba(255,255,255,.4);margin-bottom:8px;">10:00 PM – 4:00 AM</div>
+                  <div style="height:48px;border-radius:8px;background:linear-gradient(135deg,#2a1a06,#1a0c02);display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                  </div>
+                  <div style="font-size:8px;color:rgba(255,255,255,.45);margin-bottom:2px;">Early Bird: <span style="color:var(--gold);">£20</span></div>
+                  <div style="font-size:8px;color:rgba(255,255,255,.28);margin-bottom:8px;">General Admission: £30</div>
+                  <button onclick="openNavModal('AfroBeats Thursdays @ Lotus','123 City Road')" style="background:var(--gold);color:#0a0600;border:none;border-radius:8px;padding:6px 0;width:100%;font-size:10px;font-weight:700;font-family:var(--font-d);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="#0a0600"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg>
+                    Get Directions
+                  </button>
                 </div>
-                <div style="position:absolute;bottom:12px;left:14px;font-size:8px;color:rgba(255,255,255,0.3);">📍 Lotus Lounge</div>
+                <div style="position:absolute;bottom:12px;left:14px;font-size:8px;color:rgba(255,255,255,.3);">Lotus Lounge</div>
               </div>
               <div class="pnav">
-                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
-                <div class="pnav-item"><div class="pi">📅</div><div class="pl">Schedule</div></div>
-                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
-                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><div class="pnav-label">Map</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="pnav-label">Schedule</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="pnav-label">Circles</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="pnav-label">Wanting</div></div>
               </div>
             </div>
             <div class="walkthrough-caption">Fred pings Lotus</div>
           </div>
 
-          <!-- Phone 3: CENTRE — Vibe Check + Vibe Score -->
+          <!-- Phone 3 — Centre -->
           <div class="walkthrough-step reveal d3">
             <div class="phone phone-center">
               <div style="background:#08080e;padding:10px 14px 6px;display:flex;align-items:center;justify-content:space-between;">
-                <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:900;color:#fff;">Bashment</div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                <div style="font-family:var(--font-d);font-size:14px;font-weight:800;color:#fff;letter-spacing:-.03em;">Bashment</div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
               </div>
-              <!-- Vibe Check video -->
-              <div style="height:210px;position:relative;overflow:hidden;">
+              <div style="height:210px;position:relative;overflow:hidden;background:#060408;">
                 <canvas id="cvc" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(255,100,20,0.35),transparent),radial-gradient(ellipse at 70% 60%,rgba(140,40,180,0.3),transparent);"></div>
-                <!-- LIVE badge -->
-                <div style="position:absolute;top:10px;left:10px;background:rgba(210,30,50,0.92);border-radius:5px;padding:3px 8px;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;gap:4px;z-index:3;">
-                  <div style="width:5px;height:5px;background:#fff;border-radius:50%;"></div>LIVE
-                </div>
-                <!-- Vibe Check label -->
-                <div style="position:absolute;top:10px;right:10px;background:rgba(245,166,35,0.18);border:1px solid rgba(245,166,35,0.35);border-radius:6px;padding:3px 8px;font-size:8px;color:var(--gold);z-index:3;font-weight:600;">Vibe Check 📹</div>
-                <!-- Play -->
-                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
-                  <div style="width:44px;height:44px;background:rgba(255,255,255,0.14);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.2);">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
+                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(255,100,20,.4),transparent),radial-gradient(ellipse at 70% 60%,rgba(140,35,200,.35),transparent);"></div>
+                <div style="position:absolute;top:10px;left:10px;"><div class="live-badge"><div class="live-dot-r"></div>LIVE</div></div>
+                <div style="position:absolute;top:10px;right:10px;background:rgba(245,166,35,.16);border:1px solid rgba(245,166,35,.32);border-radius:8px;padding:3px 10px;font-size:9px;color:var(--gold);font-weight:700;letter-spacing:.06em;">VIBE CHECK</div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;">
+                  <div style="width:44px;height:44px;background:rgba(255,255,255,.14);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(255,255,255,.24);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
                   </div>
                 </div>
-                <!-- Info overlay -->
-                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);z-index:3;">
-                  <div style="font-size:8px;color:rgba(255,255,255,0.45);">@lotus_official · <span style="color:#b06aff;">Promoter</span></div>
-                  <div style="font-size:9px;color:#fff;font-weight:500;">Main floor right now 🔊</div>
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);z-index:5;">
+                  <div style="font-size:8px;color:rgba(255,255,255,.45);margin-bottom:2px;">@lotus_official · <span style="color:#9b5cff;">Promoter</span></div>
+                  <div style="font-size:9px;color:#fff;font-weight:500;margin-bottom:5px;">Main floor right now</div>
                 </div>
-                <!-- Progress bar -->
-                <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);z-index:4;">
-                  <div style="width:65%;height:100%;background:var(--gold);"></div>
-                </div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);z-index:6;"><div style="width:65%;height:100%;background:var(--gold);"></div></div>
               </div>
-              <!-- Event info + Vibe Score -->
               <div style="background:#0c0a10;padding:12px 14px;">
-                <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays @ Lotus</div>
-                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:10px;">10:00 PM – 1:00 AM</div>
-
-                <!-- Vibe Score -->
-                <div style="background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:8px 10px;margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;font-family:var(--font-d);letter-spacing:-.02em;">AfroBeats Thursdays @ Lotus</div>
+                <div style="font-size:8px;color:rgba(255,255,255,.4);margin-bottom:10px;">10:00 PM – 1:00 AM</div>
+                <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:8px 10px;margin-bottom:10px;">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-                    <div style="font-size:8px;color:var(--gold);font-weight:600;">⚡ Vibe Score — Live</div>
-                    <div style="font-size:16px;font-weight:900;font-family:'Sora',sans-serif;color:var(--gold);" id="vs2">88</div>
+                    <span style="font-size:8px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Vibe Score — Live</span>
+                    <span style="font-size:16px;font-weight:800;font-family:var(--font-d);color:var(--gold);letter-spacing:-.04em;" id="vs2">88</span>
                   </div>
-                  <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;">
-                    <div id="vsb2" style="width:88%;height:100%;background:linear-gradient(90deg,#c17d10,#f5a623);border-radius:2px;transition:width 1s ease;"></div>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;margin-top:5px;">
-                    <div style="font-size:7px;color:rgba(255,255,255,0.4);">94% capacity · 147 check-ins</div>
-                    <div style="font-size:7px;color:var(--gold);">↑ Rising</div>
-                  </div>
+                  <div class="prog"><div class="prog-fill" id="vsb2" style="width:88%;"></div></div>
                 </div>
-
                 <div style="display:flex;gap:5px;margin-bottom:10px;">
-                  <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.2);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);">Afrobeats</div>
-                  <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,0.4);">10 PM</div>
-                  <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,0.4);">$20 EB</div>
+                  <div style="background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.2);border-radius:6px;padding:3px 7px;font-size:8px;color:var(--gold);font-weight:600;">Afrobeats</div>
+                  <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,.4);">10 PM</div>
+                  <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,.4);">£20 EB</div>
                 </div>
-                <button style="width:100%;background:var(--gold);border:none;border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:#0a0600;font-family:'Space Grotesk',sans-serif;cursor:pointer;">Get Tickets</button>
+                <div style="display:flex;gap:5px;">
+                  <button style="flex:1;background:var(--gold);border:none;border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:#0a0600;font-family:var(--font-d);cursor:pointer;">Get Tickets</button>
+                  <button onclick="openNavModal('AfroBeats Thursdays @ Lotus','123 City Road')" style="background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
+                  </button>
+                </div>
               </div>
               <div class="pnav">
-                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
-                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
-                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
-                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><div class="pnav-label">Map</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="pnav-label">Favs</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="pnav-label">Circles</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="pnav-label">Wanting</div></div>
               </div>
             </div>
-            <div class="walkthrough-caption" style="font-size:1rem;">Friends declare<br/>interest</div>
+            <div class="walkthrough-caption" style="font-size:1rem;">Friends declare interest</div>
           </div>
 
-          <!-- Phone 4: Crowd density / details -->
+          <!-- Phone 4 -->
           <div class="walkthrough-step reveal d4">
             <div class="phone">
-              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div class="pbar"><span>9:41</span><span>···</span></div>
               <div style="background:#0c0a10;height:370px;overflow:hidden;padding:10px;">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
-                  <div class="avatar-cluster">
-                    <div class="av" style="background:#d4a843;width:24px;height:24px;font-size:8px;margin-left:0;">A</div>
-                    <div class="av" style="background:#c8895c;width:24px;height:24px;font-size:8px;">F</div>
-                    <div class="av" style="background:#b87333;width:24px;height:24px;font-size:8px;">J</div>
-                  </div>
-                  <div style="font-size:8px;color:rgba(255,255,255,0.4);">+ 3 friends going</div>
+                  <div class="av-row"><div class="av" style="background:#d4a843;width:24px;height:24px;font-size:8px;margin-left:0;">A</div><div class="av" style="background:#c8895c;width:24px;height:24px;font-size:8px;">F</div><div class="av" style="background:#b87333;width:24px;height:24px;font-size:8px;">J</div></div>
+                  <div style="font-size:8px;color:rgba(255,255,255,.4);">+ 3 friends going</div>
                 </div>
-                <div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;">AfroBeats Thursdays @ Lotus</div>
-                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:12px;">10:00 PM – 4:00 AM</div>
-
-                <!-- Crowd timeline -->
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px;margin-bottom:10px;">
-                  <div style="font-size:8px;color:rgba(255,255,255,0.45);margin-bottom:8px;">📊 Expected Crowd · Peaks 11PM–1AM</div>
-                  <div style="display:flex;gap:3px;align-items:flex-end;height:36px;">
-                    <div style="flex:1;background:rgba(245,166,35,0.18);border-radius:2px 2px 0 0;height:25%;"></div>
-                    <div style="flex:1;background:rgba(245,166,35,0.32);border-radius:2px 2px 0 0;height:45%;"></div>
-                    <div style="flex:1;background:rgba(245,166,35,0.52);border-radius:2px 2px 0 0;height:65%;"></div>
-                    <div style="flex:1;background:rgba(245,166,35,0.78);border-radius:2px 2px 0 0;height:90%;"></div>
-                    <div style="flex:1;background:rgba(255,100,20,1);border-radius:2px 2px 0 0;height:100%;"></div>
-                    <div style="flex:1;background:rgba(255,90,15,0.92);border-radius:2px 2px 0 0;height:95%;"></div>
-                    <div style="flex:1;background:rgba(245,166,35,0.65);border-radius:2px 2px 0 0;height:72%;"></div>
-                    <div style="flex:1;background:rgba(245,166,35,0.4);border-radius:2px 2px 0 0;height:50%;"></div>
+                <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:2px;font-family:var(--font-d);letter-spacing:-.02em;">AfroBeats Thursdays @ Lotus</div>
+                <div style="font-size:8px;color:rgba(255,255,255,.4);margin-bottom:12px;">10:00 PM – 4:00 AM</div>
+                <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px;margin-bottom:10px;">
+                  <div style="font-size:8px;color:rgba(255,255,255,.45);margin-bottom:8px;font-weight:600;">Expected Crowd · Peaks 11PM–1AM</div>
+                  <div class="crowd-chart" style="margin-bottom:6px;">
+                    <div class="crowd-bar" style="height:20%;background:rgba(245,166,35,.3);"></div>
+                    <div class="crowd-bar" style="height:40%;background:rgba(245,166,35,.5);"></div>
+                    <div class="crowd-bar" style="height:65%;background:rgba(245,166,35,.7);"></div>
+                    <div class="crowd-bar" style="height:90%;background:rgba(245,166,35,.88);"></div>
+                    <div class="crowd-bar" style="height:100%;background:rgba(255,80,20,1);"></div>
+                    <div class="crowd-bar" style="height:95%;background:rgba(255,90,20,.95);"></div>
+                    <div class="crowd-bar" style="height:75%;background:rgba(245,166,35,.72);"></div>
+                    <div class="crowd-bar" style="height:52%;background:rgba(245,166,35,.5);"></div>
                   </div>
-                  <div style="font-size:7px;color:rgba(255,255,255,0.28);margin-top:5px;text-align:center;">🔥 Peaks midnight · Plan accordingly</div>
+                  <div style="font-size:7px;color:rgba(255,255,255,.28);text-align:center;">Peaks midnight</div>
                 </div>
-
-                <div style="height:55px;border-radius:9px;background:linear-gradient(135deg,#261600,#160c00);margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 10px;">
-                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(255,140,20,0.3),transparent);"></div>
-                  <div style="position:relative;z-index:1;">
-                    <div style="font-size:9px;font-weight:600;color:rgba(255,200,80,0.8);">6 Vibe Checks live</div>
-                    <div style="font-size:7px;color:rgba(255,255,255,0.3);">Early Bird $20 · General $30</div>
-                  </div>
-                </div>
-
-                <div style="font-size:8px;color:rgba(255,255,255,0.35);margin-bottom:8px;">General Admission: <span style="color:rgba(255,255,255,0.65);">$30</span> &nbsp;·&nbsp; Early Bird: <span style="color:var(--gold);">$20</span></div>
-                <button style="width:100%;background:var(--amber);border:none;border-radius:10px;padding:9px;font-size:10px;font-weight:700;color:#0a0600;font-family:'Space Grotesk',sans-serif;cursor:pointer;">Get Tickets →</button>
+                <div style="font-size:8px;color:rgba(255,255,255,.35);margin-bottom:6px;">6 Vibe Checks · Early Bird £20 · General £30</div>
+                <button style="width:100%;background:var(--amber);border:none;border-radius:10px;padding:9px;font-size:10px;font-weight:700;color:#0a0600;font-family:var(--font-d);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">
+                  Get Tickets
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0a0600" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
               </div>
               <div class="pnav">
-                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
-                <div class="pnav-item"><div class="pi">🤍</div><div class="pl">Favs</div></div>
-                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
-                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><div class="pnav-label">Map</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="pnav-label">Favs</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="pnav-label">Circles</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="pnav-label">Wanting</div></div>
               </div>
             </div>
-            <div class="walkthrough-caption">Details show it starts<br/>getting busy 11pm</div>
+            <div class="walkthrough-caption">Details show it starts getting busy 11pm</div>
           </div>
 
-          <!-- Phone 5: Friends pin + RSVP -->
+          <!-- Phone 5 -->
           <div class="walkthrough-step reveal d5">
             <div class="phone">
-              <div class="phone-statusbar"><span>9:41</span><span style="font-size:8px;">●●●</span></div>
+              <div class="pbar"><span>9:41</span><span>···</span></div>
               <div style="background:#0c0a10;height:370px;overflow:hidden;padding:10px;">
-                <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);border-radius:10px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                   <div style="display:flex;align-items:center;gap:5px;">
-                    <span style="font-size:10px;">📍</span>
-                    <span style="font-size:9px;color:var(--gold);font-weight:600;">You Pinned it</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span style="font-size:9px;color:var(--gold);font-weight:700;">Pinned</span>
                   </div>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(245,166,35,0.5)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(245,166,35,.5)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </div>
-                <div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:8px;">AfroBeats Fridays — June 12</div>
+                <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:8px;font-family:var(--font-d);">AfroBeats Fridays — June 12</div>
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
-                  <div class="avatar-cluster">
-                    <div class="av" style="background:#d4a843;width:26px;height:26px;font-size:9px;margin-left:0;">AK</div>
-                    <div class="av" style="background:#b87333;width:26px;height:26px;font-size:9px;">JT</div>
-                    <div class="av" style="background:#c8895c;width:26px;height:26px;font-size:9px;">SC</div>
-                  </div>
-                  <div style="font-size:8px;color:rgba(255,255,255,0.4);">+ 2 more going</div>
+                  <div class="av-row"><div class="av" style="background:#d4a843;width:26px;height:26px;font-size:9px;margin-left:0;">AK</div><div class="av" style="background:#b87333;width:26px;height:26px;font-size:9px;">JT</div><div class="av" style="background:#c8895c;width:26px;height:26px;font-size:9px;">SC</div></div>
+                  <div style="font-size:8px;color:rgba(255,255,255,.4);">+ 2 more going</div>
                 </div>
-                <div style="height:65px;border-radius:9px;background:linear-gradient(135deg,#261800,#180e00);margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 12px;">
-                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(255,150,30,0.4),transparent);"></div>
+                <div style="height:60px;border-radius:9px;background:linear-gradient(135deg,#261800,#180e00);margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 12px;">
+                  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(255,150,30,.4),transparent);"></div>
                   <div style="position:relative;z-index:1;">
-                    <div style="font-size:9px;font-weight:600;color:rgba(255,200,80,0.85);">AfroBeats Thursdays @ Lotus</div>
-                    <div style="font-size:7px;color:rgba(255,255,255,0.3);margin-top:2px;">🎵 Doors 6:00 PM · 132 interested</div>
+                    <div style="font-size:9px;font-weight:600;color:rgba(255,200,80,.85);font-family:var(--font-d);">AfroBeats Thursdays @ Lotus</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,.3);margin-top:2px;">Doors 6:00 PM · 132 interested</div>
                   </div>
                 </div>
-                <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-bottom:8px;">👤 10 Going (and counting)</div>
-                <div style="height:1px;background:rgba(255,255,255,0.06);margin:8px 0;"></div>
-                <button style="width:100%;background:rgba(245,166,35,0.14);border:1px solid rgba(245,166,35,0.35);border-radius:10px;padding:10px;font-size:10px;font-weight:600;color:var(--gold);font-family:'Space Grotesk',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:8px;">
-                  📍 RSVP · Tell Your Circle ↓
+                <div style="font-size:8px;color:rgba(255,255,255,.4);margin-bottom:8px;">10 Going (and counting)</div>
+                <div style="height:.5px;background:rgba(255,255,255,.06);margin:8px 0;"></div>
+                <button style="width:100%;background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.35);border-radius:10px;padding:9px;font-size:10px;font-weight:600;color:var(--gold);font-family:var(--font-d);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:6px;">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  RSVP — Tell Your Circle
                 </button>
-                <div style="font-size:7px;color:rgba(255,255,255,0.22);text-align:center;line-height:1.5;">Friends decide together — no group chat needed</div>
+                <div style="font-size:7px;color:rgba(255,255,255,.22);text-align:center;line-height:1.5;">Friends decide together — no group chat needed</div>
               </div>
               <div class="pnav">
-                <div class="pnav-item"><div class="pi">🗺️</div><div class="pl">Map</div></div>
-                <div class="pnav-item active"><div class="pi" style="filter:drop-shadow(0 0 4px var(--gold));">🤍</div><div class="pl" style="color:var(--gold);">Favs</div></div>
-                <div class="pnav-item"><div class="pi">⭕</div><div class="pl">Circles</div></div>
-                <div class="pnav-item"><div class="pi">📊</div><div class="pl">Wanting</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><div class="pnav-label">Map</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="pnav-label active">Favs</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="pnav-label">Circles</div></div>
+                <div class="pnav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="pnav-label">Wanting</div></div>
               </div>
             </div>
-            <div class="walkthrough-caption">Friends pin + go<br/>to Lotus</div>
+            <div class="walkthrough-caption">Friends pin + go to Lotus</div>
           </div>
-
         </div>
 
+        <!-- No Group Chat -->
         <div class="reveal" style="text-align:center;margin-top:36px;">
           <div style="display:inline-flex;flex-direction:column;align-items:center;gap:16px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,0.4));"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.6;"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.9;"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.6;"></div>
-              <div style="width:32px;height:1px;background:linear-gradient(90deg,rgba(245,166,35,0.4),transparent);"></div>
+              <div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.4));"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.6;"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.6;"></div>
+              <div style="width:32px;height:1px;background:linear-gradient(90deg,rgba(245,166,35,.4),transparent);"></div>
             </div>
-            <p style="font-family:'Sora',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:-0.03em;color:var(--cream);line-height:1.3;">Friends decide where to meet up —</p>
-            <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);border-radius:100px;padding:10px 24px;">
-              <span style="font-size:1rem;">🚫</span>
-              <span style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-0.02em;">No Group Chat Purgatory!</span>
+            <p style="font-family:var(--font-d);font-size:1.35rem;font-weight:700;color:var(--cream);line-height:1.3;letter-spacing:-.02em;">Friends decide where to meet up —</p>
+            <div class="ngc-pill">
+              <div class="ngc-icon"></div>
+              <span style="font-family:var(--font-d);font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-.02em;">No Group Chat Purgatory.</span>
             </div>
           </div>
         </div>
@@ -581,12 +687,39 @@
           <p class="section-body">Built for people who live in the moment — not people who spend 45 minutes in a group chat deciding.</p>
         </div>
         <div class="features-grid reveal d2">
-          <div class="feat-card"><div class="feat-icon">🗺️</div><div class="feat-title">Live Heat Map</div><p class="feat-body">See nightlife density across your city in real time. New to town? Red means packed, blue means hidden gem. No local knowledge required.</p></div>
-          <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">Vibe Score</div><p class="feat-body">A live 0–100 score recalculated every minute from check-ins, capacity, crowd reactions, and Vibe Check posts. The crowd is the review.</p></div>
-          <div class="feat-card"><div class="feat-icon">📹</div><div class="feat-title">Vibe Check</div><p class="feat-body">10-second clips from inside the venue posted by promoters and patrons alike. No filters. Hear the music, see the crowd, decide instantly.</p></div>
-          <div class="feat-card"><div class="feat-icon">👥</div><div class="feat-title">Circles & Pings</div><p class="feat-body">Friends ping events, you see who's going. No coordination overhead — one tap tells your circle "I'm thinking Lotus tonight."</p></div>
-          <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Crowd Timeline</div><p class="feat-body">See predicted crowd density hour by hour. Know it peaks at 11PM before you leave — or plan around it entirely.</p></div>
-          <div class="feat-card"><div class="feat-icon">🎟️</div><div class="feat-title">Instant Tickets</div><p class="feat-body">Buy in-app, no hidden fees, no redirects. Early bird, general admission — one tap and you're in.</p></div>
+          <div class="feat-card">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+            <div class="feat-title">Live Heat Map</div>
+            <p class="feat-body">See nightlife density across your city in real time. New to town? Red means packed, blue means hidden gem. No local knowledge required.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div class="feat-title">Vibe Score</div>
+            <p class="feat-body">A live 0–100 score recalculated every minute from check-ins, capacity, crowd reactions, and Vibe Check posts. The crowd is the review.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+            <div class="feat-title">Vibe Check</div>
+            <p class="feat-body">10-second clips from inside the venue posted by promoters and patrons. No filters. Hear the music, see the crowd, decide instantly.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="feat-title">Circles &amp; Pings</div>
+            <p class="feat-body">Friends ping events, you see who's going. No coordination overhead — one tap tells your circle you're thinking Lotus tonight.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">
+              <!-- Navigation feature icon — new -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
+            </div>
+            <div class="feat-title">In-App Navigation</div>
+            <p class="feat-body">Get directions to any event without leaving the app. Live route tracking, ETA, walking or driving modes — door to dance floor in one tap.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div class="feat-title">Crowd Timeline</div>
+            <p class="feat-body">See predicted crowd density hour by hour. Know it peaks at 11PM before you leave — or plan around it entirely.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -595,10 +728,10 @@
     <section style="padding:20px 24px 80px;">
       <div class="section-inner">
         <div class="stats-row reveal">
-          <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Waitlist Members</div></div>
+          <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Beta Members</div></div>
           <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Partner Venues</div></div>
           <div class="stat"><div class="stat-num">12</div><div class="stat-label">Cities at Launch</div></div>
-          <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Beta Rating</div></div>
+          <div class="stat"><div class="stat-num">4.9</div><div class="stat-label">Beta Rating</div></div>
         </div>
       </div>
     </section>
@@ -606,7 +739,7 @@
     <!-- TESTIMONIALS -->
     <section id="social" style="padding:80px 24px;">
       <div class="section-inner">
-        <div class="reveal" style="text-align:center;">
+        <div class="reveal" style="text-align:center;margin-bottom:0;">
           <div class="section-label" style="text-align:center;">The Word</div>
           <h2 class="section-title" style="text-align:center;">Already <em>Buzzing.</em></h2>
         </div>
@@ -623,165 +756,173 @@
           </div>
           <div class="testi-card reveal d3">
             <div class="testi-stars">★★★★★</div>
-            <p class="testi-text">"Someone pinged Lotus, everyone saw who's in — we decided in 30 seconds. No back-and-forth. No 'where do you want to go?' purgatory."</p>
-            <div class="testi-author"><div class="testi-av" style="background:var(--gold-deep);">SC</div><div><div class="testi-name">Sofia C.</div><div class="testi-handle">@sofiaxsounds</div></div></div>
+            <p class="testi-text">"Someone pinged Lotus, everyone saw who's in — we decided in 30 seconds. No back-and-forth. No group chat purgatory."</p>
+            <div class="testi-author"><div class="testi-av" style="background:var(--gold-d);">SC</div><div><div class="testi-name">Sofia C.</div><div class="testi-handle">@sofiaxsounds</div></div></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA / WAITLIST FORM -->
-    <section id="signup" style="padding:120px 24px;position:relative;overflow:hidden;">
-      <!-- Ambient glow behind form -->
-      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(245,166,35,0.07),transparent);pointer-events:none;"></div>
+    <!-- BETA SIGNUP -->
+    <section id="signup" class="signup-section">
+      <div style="text-align:center;margin-bottom:52px;max-width:720px;margin-left:auto;margin-right:auto;" class="reveal">
+        <div class="section-label" style="text-align:center;">Limited Early Access</div>
+        <h2 class="section-title" style="text-align:center;font-size:clamp(2.5rem,5vw,4.5rem);">Get In Before<br/><em>Everyone Else.</em></h2>
+        <p style="font-size:1rem;font-weight:300;color:var(--mist);line-height:1.8;margin:16px auto 0;max-width:400px;">Join the beta — get early access, exclusive event drops, and your first month free.</p>
+      </div>
 
-      <div class="reveal" style="max-width:720px;margin:0 auto;position:relative;">
+      <div class="form-card reveal d2" id="form-wrap">
 
-        <!-- Header -->
-        <div style="text-align:center;margin-bottom:52px;">
-          <div class="section-label" style="text-align:center;">Limited Early Access</div>
-          <h2 class="section-title" style="text-align:center;font-size:clamp(2.5rem,5vw,4.5rem);">Get In Before<br/><em>Everyone Else.</em></h2>
-          <p style="font-size:1rem;font-weight:300;color:var(--mist);line-height:1.8;margin:20px auto 0;max-width:400px;">Join the beta — get early access, exclusive event drops, and your first month free.</p>
+        <!-- Step 1 — Email -->
+        <div id="step1">
+          <div class="step-indicator">
+            <div class="step-dot-f active"></div>
+            <div class="step-dot-f"></div>
+          </div>
+          <label class="form-label" for="wl-email">Your Email Address</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input class="form-input" type="email" id="wl-email" placeholder="you@example.com" required autocomplete="email" style="flex:1;min-width:200px;"/>
+            <button onclick="submitStep1()" class="btn-primary" style="white-space:nowrap;padding:15px 28px;">
+              Continue
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <p class="err-msg" id="err-msg">Please enter a valid email address.</p>
         </div>
 
-        <!-- Form card -->
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,166,35,0.22);border-radius:28px;padding:48px 44px;backdrop-filter:blur(8px);">
-
-          <!-- Form states -->
-          <div id="form-wrap">
-
-            <!-- Step 1: email -->
-            <div id="step1">
-              <label style="display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Your Email Address</label>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <input
-                  id="wl-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  autocomplete="email"
-                  style="flex:1;min-width:220px;background:rgba(255,255,255,0.05);border:1px solid rgba(245,166,35,0.25);border-radius:14px;padding:16px 20px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:1rem;outline:none;transition:border-color 0.25s;"
-                  onfocus="this.style.borderColor='rgba(245,166,35,0.65)'"
-                  onblur="this.style.borderColor='rgba(245,166,35,0.25)'"
-                />
-                <button
-                  onclick="submitStep1()"
-                  style="background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;padding:16px 32px;border-radius:14px;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 0 28px rgba(245,166,35,0.35);transition:all 0.25s;"
-                  onmouseover="this.style.background='#ffcc55';this.style.boxShadow='0 0 44px rgba(245,166,35,0.6)'"
-                  onmouseout="this.style.background='var(--gold)';this.style.boxShadow='0 0 28px rgba(245,166,35,0.35)'"
-                >
-                  Join Beta →
-                </button>
-              </div>
-              <p id="err-msg" style="display:none;color:#ff7a7a;font-size:0.8rem;margin-top:10px;"></p>
+        <!-- Step 2 — Profile + Phone -->
+        <div id="step2" style="display:none;">
+          <div class="step-indicator">
+            <div class="step-dot-f"></div>
+            <div class="step-dot-f active"></div>
+          </div>
+          <div style="text-align:center;margin-bottom:24px;">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
             </div>
-
-            <!-- Step 2: optional extra info -->
-            <div id="step2" style="display:none;">
-              <div style="text-align:center;margin-bottom:28px;">
-                <div style="font-size:1.6rem;margin-bottom:8px;">🎉</div>
-                <div style="font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:6px;">You're nearly in.</div>
-                <div style="font-size:0.88rem;color:var(--mist);">One more thing — help us personalise your experience.</div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-                <div>
-                  <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Your City</label>
-                  <input
-                    id="wl-city"
-                    type="text"
-                    placeholder="e.g. New York"
-                    style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:13px 16px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.25s;"
-                    onfocus="this.style.borderColor='rgba(245,166,35,0.55)'"
-                    onblur="this.style.borderColor='rgba(245,166,35,0.2)'"
-                  />
-                </div>
-                <div>
-                  <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">I am a…</label>
-                  <select
-                    id="wl-type"
-                    style="width:100%;background:#1a1208;border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:13px 16px;color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;outline:none;appearance:none;cursor:pointer;transition:border-color 0.25s;"
-                    onfocus="this.style.borderColor='rgba(245,166,35,0.55)'"
-                    onblur="this.style.borderColor='rgba(245,166,35,0.2)'"
-                  >
-                    <option value="">Select one…</option>
-                    <option value="patron">Patron / Party Goer</option>
-                    <option value="promoter">Promoter / Organiser</option>
-                    <option value="venue_owner">Venue Owner</option>
-                    <option value="artist_dj">Artist / DJ</option>
-                  </select>
-                </div>
-              </div>
-              <div style="margin-bottom:20px;">
-                <label style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Favourite Genres (pick all that apply)</label>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;" id="genre-tags">
-                  <span class="gtag" data-val="afrobeats" onclick="toggleTag(this)">🥁 Afrobeats</span>
-                  <span class="gtag" data-val="techno" onclick="toggleTag(this)">🎵 Techno</span>
-                  <span class="gtag" data-val="house" onclick="toggleTag(this)">🕺 House</span>
-                  <span class="gtag" data-val="hiphop" onclick="toggleTag(this)">🎤 Hip-Hop</span>
-                  <span class="gtag" data-val="amapiano" onclick="toggleTag(this)">🌊 Amapiano</span>
-                  <span class="gtag" data-val="jazz" onclick="toggleTag(this)">🎷 Jazz</span>
-                  <span class="gtag" data-val="rnb" onclick="toggleTag(this)">🎶 R&B</span>
-                  <span class="gtag" data-val="indie" onclick="toggleTag(this)">🎸 Indie</span>
-                </div>
-              </div>
-              <button
-                onclick="submitStep2()"
-                id="submit-btn"
-                style="width:100%;background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;padding:17px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 0 28px rgba(245,166,35,0.35);transition:all 0.25s;"
-                onmouseover="this.style.background='#ffcc55'"
-                onmouseout="this.style.background='var(--gold)'"
-              >
-                Secure My Spot
-              </button>
-              <button
-                onclick="submitStep2(true)"
-                style="display:block;width:100%;margin-top:12px;background:none;border:none;color:var(--dim);font-size:0.8rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;"
-              >
-                Skip — just add my email
-              </button>
-            </div>
-
-            <!-- Success state -->
-            <div id="step-success" style="display:none;text-align:center;padding:20px 0;">
-              <div style="font-size:3rem;margin-bottom:16px;">🎊</div>
-              <div style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:10px;">You're on the list.</div>
-              <div style="font-size:0.95rem;color:var(--mist);line-height:1.8;max-width:380px;margin:0 auto;">We'll hit you first when Bashment drops in your city. Keep an eye on your inbox — it's going to be a good night.</div>
-              <div style="margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);border-radius:100px;padding:10px 20px;">
-                <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 2s ease-in-out infinite;"></div>
-                <span style="font-size:0.8rem;color:var(--gold);font-weight:500;letter-spacing:0.06em;">Spot confirmed — you're in</span>
-              </div>
-            </div>
-
-            <!-- Error fallback -->
-            <div id="step-error" style="display:none;text-align:center;padding:20px 0;">
-              <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
-              <div style="font-size:0.95rem;color:var(--mist);margin-bottom:16px;">Something went wrong submitting your details. Please try again or email us directly.</div>
-              <button onclick="retryForm()" style="background:var(--gold);color:#0a0600;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;padding:12px 28px;border-radius:12px;border:none;cursor:pointer;">Try Again</button>
-            </div>
-
-          </div><!-- /form-wrap -->
-
-          <!-- Trust row inside card -->
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:32px;padding-top:28px;border-top:1px solid rgba(245,166,35,0.1);">
-            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> No spam, ever</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> Unsubscribe any time</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> No credit card needed</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:0.75rem;color:var(--dim);"><span style="color:var(--gold);font-size:11px;">✓</span> Free beta access</div>
+            <div style="font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-.02em;">Almost there.</div>
+            <div style="font-size:.88rem;color:var(--mist);">Help us personalise your experience.</div>
           </div>
 
-        </div><!-- /form card -->
-
-        <!-- Waitlist counter -->
-        <div style="text-align:center;margin-top:28px;display:flex;align-items:center;justify-content:center;gap:10px;">
-          <div class="avatar-cluster">
-            <div class="av" style="background:#d4a843;">AK</div>
-            <div class="av" style="background:#c8895c;">JT</div>
-            <div class="av" style="background:#b87333;">SC</div>
-            <div class="av" style="background:#d4963a;">MR</div>
+          <!-- ── PHONE NUMBER FIELD ── -->
+          <div style="margin-bottom:20px;">
+            <label class="form-label" for="wl-phone">
+              Mobile Number
+              <span style="font-size:9px;font-weight:400;color:var(--dim);text-transform:none;letter-spacing:0;margin-left:6px;">— Receive your beta confirmation via SMS</span>
+            </label>
+            <div class="phone-input-row">
+              <select class="dial-select" id="wl-dialcode">
+                <option value="+44">GB +44</option>
+                <option value="+1">US +1</option>
+                <option value="+1-CA">CA +1</option>
+                <option value="+234">NG +234</option>
+                <option value="+233">GH +233</option>
+                <option value="+33">FR +33</option>
+                <option value="+31">NL +31</option>
+                <option value="+49">DE +49</option>
+                <option value="+971">AE +971</option>
+                <option value="+27">ZA +27</option>
+                <option value="+44-IE">IE +353</option>
+              </select>
+              <input class="form-input" type="tel" id="wl-phone" placeholder="7700 900 000" autocomplete="tel" style="flex:1;"/>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:7px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <span style="font-size:.72rem;color:var(--dim);">We'll send a welcome text when your access is confirmed. No spam.</span>
+            </div>
           </div>
-          <div style="font-size:0.82rem;color:var(--mist);">Joining <strong style="color:var(--cream);">50,247</strong> people already in the beta</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div>
+              <label class="form-label" for="wl-city">Your City</label>
+              <input class="form-input" type="text" id="wl-city" placeholder="e.g. London"/>
+            </div>
+            <div>
+              <label class="form-label" for="wl-type">I am a</label>
+              <select class="form-input" id="wl-type">
+                <option value="">Select…</option>
+                <option value="patron">Patron / Party Goer</option>
+                <option value="promoter">Promoter / Organiser</option>
+                <option value="venue">Venue Owner</option>
+                <option value="artist">Artist / DJ</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-divider"></div>
+          <label class="form-label">Favourite Genres</label>
+          <div class="genre-wrap" id="genre-tags" style="margin-bottom:20px;">
+            <span class="gtag" data-val="afrobeats" onclick="toggleTag(this)">Afrobeats</span>
+            <span class="gtag" data-val="techno" onclick="toggleTag(this)">Techno</span>
+            <span class="gtag" data-val="house" onclick="toggleTag(this)">House</span>
+            <span class="gtag" data-val="hiphop" onclick="toggleTag(this)">Hip-Hop</span>
+            <span class="gtag" data-val="amapiano" onclick="toggleTag(this)">Amapiano</span>
+            <span class="gtag" data-val="reggae_dancehall" onclick="toggleTag(this)">Reggae / Dancehall</span>
+            <span class="gtag" data-val="jazz" onclick="toggleTag(this)">Jazz</span>
+            <span class="gtag" data-val="rnb" onclick="toggleTag(this)">R&amp;B</span>
+          </div>
+          <button onclick="submitStep2()" class="btn-primary" style="width:100%;padding:16px;justify-content:center;margin-bottom:10px;">
+            Secure My Spot
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button onclick="submitStep2(true)" style="display:block;width:100%;background:none;border:none;color:var(--dim);font-size:.8rem;cursor:pointer;font-family:var(--font-b);padding:8px;">Skip — just add my email</button>
         </div>
 
+        <!-- Success -->
+        <div id="step-success">
+          <div style="text-align:center;padding:20px 0;">
+            <div class="success-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div style="font-family:var(--font-d);font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-.03em;">You're on the list.</div>
+            <div style="font-size:.9rem;color:var(--mist);line-height:1.8;max-width:360px;margin:0 auto;" id="success-msg">We'll hit you first when Bashment drops in your city. Keep an eye on your inbox — and your phone.</div>
+            <div style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:100px;padding:10px 20px;">
+              <div class="live-dot"></div>
+              <span style="font-size:.8rem;color:var(--gold);font-weight:600;letter-spacing:.04em;">Spot confirmed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="step-error">
+          <div style="text-align:center;padding:20px 0;">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div style="font-size:.95rem;color:var(--mist);margin-bottom:16px;">Something went wrong. Please try again.</div>
+            <button onclick="retryForm()" class="btn-primary" style="width:auto;padding:12px 28px;justify-content:center;">Try Again</button>
+          </div>
+        </div>
+
+        <!-- Trust row — SVG checkmarks replacing trust-check text -->
+        <div class="trust-row">
+          <div class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            No spam, ever
+          </div>
+          <div class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            Unsubscribe any time
+          </div>
+          <div class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            No credit card needed
+          </div>
+          <div class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            Free beta access
+          </div>
+        </div>
+      </div>
+
+      <!-- Counter -->
+      <div style="text-align:center;margin-top:28px;display:flex;align-items:center;justify-content:center;gap:10px;" class="reveal d3">
+        <div class="av-row">
+          <div class="av" style="background:#d4a843;">AK</div>
+          <div class="av" style="background:#c8895c;">JT</div>
+          <div class="av" style="background:#b87333;">SC</div>
+          <div class="av" style="background:#d4963a;">MR</div>
+        </div>
+        <div style="font-size:.82rem;color:var(--mist);">Joining <strong style="color:var(--cream);">50,247</strong> people already in the beta</div>
       </div>
     </section>
 
@@ -800,23 +941,19 @@
   </div>
 
   <script>
-    // Scroll reveal
-    const ro = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.07, rootMargin: '0px 0px -20px 0px' });
+    // ── CONFIG ──────────────────────────────────────────────────
+    const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/27613010/4yv2wkd/';
+    // To enable real routing, add your Mapbox token below:
+    const MAPBOX_TOKEN = ''; // e.g. 'pk.eyJ1IjoiYmFzaG1lbnQ...'
+
+    // ── REVEAL ON SCROLL ────────────────────────────────────────
+    const ro = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), { threshold:.07, rootMargin:'0px 0px -20px 0px' });
     document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-    // Mobile menu
+    // ── MOBILE MENU ─────────────────────────────────────────────
     document.querySelectorAll('#mob-menu a').forEach(a => a.addEventListener('click', () => document.getElementById('mob-menu').classList.remove('open')));
 
-    // ── Waitlist form ──────────────────────────────────────────────
-    // STEP 1: Replace this URL with your Zapier "Catch Hook" webhook URL
-    // How to get it:
-    //   1. Go to zapier.com → Create Zap
-    //   2. Trigger: "Webhooks by Zapier" → Event: "Catch Hook" → Copy the URL
-    //   3. Action: "Google Sheets" → Event: "Create Spreadsheet Row"
-    //   4. Map: email, city, type, genres, timestamp → your Sheet columns
-    //   5. Paste the webhook URL below and you're live
-    const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID_HERE/';
-
+    // ── FORM STATE ──────────────────────────────────────────────
     let wlEmail = '';
     let selectedGenres = [];
 
@@ -828,8 +965,7 @@
     function submitStep1() {
       const input = document.getElementById('wl-email');
       const email = input.value.trim();
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email || !re.test(email)) { showErr('Please enter a valid email address.'); input.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('Please enter a valid email address.'); input.focus(); return; }
       wlEmail = email;
       document.getElementById('err-msg').style.display = 'none';
       document.getElementById('step1').style.display = 'none';
@@ -840,45 +976,37 @@
       const val = el.dataset.val;
       if (el.classList.contains('active')) {
         el.classList.remove('active');
-        el.style.background = 'rgba(245,166,35,0.08)';
-        el.style.borderColor = 'rgba(245,166,35,0.2)';
-        el.style.color = 'var(--mist)';
         selectedGenres = selectedGenres.filter(v => v !== val);
       } else {
         el.classList.add('active');
-        el.style.background = 'rgba(245,166,35,0.22)';
-        el.style.borderColor = 'rgba(245,166,35,0.55)';
-        el.style.color = 'var(--gold)';
         selectedGenres.push(val);
       }
     }
 
     async function submitStep2(skip = false) {
-      const btn = document.getElementById('submit-btn');
-      btn.textContent = 'Submitting…'; btn.disabled = true;
+      const dialCode = document.getElementById('wl-dialcode').value.replace('-CA','').replace('-IE','');
+      const phoneRaw = document.getElementById('wl-phone').value.trim().replace(/[\s\-()]/g,'');
+      const phone = phoneRaw ? dialCode + phoneRaw : '';
+      const hasPhone = !!phone;
 
       const payload = {
         email: wlEmail,
+        phone: phone,
         city: skip ? '' : (document.getElementById('wl-city').value.trim() || ''),
         user_type: skip ? '' : (document.getElementById('wl-type').value || ''),
         genres: skip ? '' : selectedGenres.join(', '),
         timestamp: new Date().toISOString(),
-        source: 'landing_page_waitlist'
+        source: 'landing_page_waitlist',
+        send_welcome_email: true,
+        send_welcome_sms: hasPhone
       };
 
       try {
-        // Zapier webhooks accept no-cors POSTs — we fire and treat as success
-        await fetch(ZAPIER_WEBHOOK, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        showSuccess();
-      } catch (err) {
-        // If webhook isn't configured yet, still show success in demo mode
-        if (ZAPIER_WEBHOOK.includes('YOUR_HOOK_ID_HERE')) {
-          showSuccess(); // demo mode — no real submission
+        await fetch(ZAPIER_WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        showSuccess(hasPhone);
+      } catch(err) {
+        if (!ZAPIER_WEBHOOK || ZAPIER_WEBHOOK.includes('YOUR_HOOK_ID_HERE')) {
+          showSuccess(hasPhone);
         } else {
           document.getElementById('step2').style.display = 'none';
           document.getElementById('step-error').style.display = 'block';
@@ -886,10 +1014,13 @@
       }
     }
 
-    function showSuccess() {
-      document.getElementById('step2').style.display = 'none';
+    function showSuccess(hasPhone) {
       document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'none';
       document.getElementById('step-success').style.display = 'block';
+      if (hasPhone) {
+        document.getElementById('success-msg').textContent = "We'll hit you first when Bashment drops in your city. Check your inbox and your phone — welcome text on its way.";
+      }
     }
 
     function retryForm() {
@@ -898,76 +1029,344 @@
       document.getElementById('wl-email').value = wlEmail;
     }
 
-    // Canvas: city heat map
-    function drawMap(id, heatPts) {
+    // ── VIBE SCORE ANIMATION ────────────────────────────────────
+    function animVS() {
+      const el = document.getElementById('vs2'), bar = document.getElementById('vsb2');
+      if (!el || !bar) return;
+      setInterval(() => {
+        const cur = parseInt(el.textContent);
+        const next = Math.min(99, Math.max(72, cur + Math.floor(Math.random() * 7) - 2));
+        el.textContent = next; bar.style.width = next + '%';
+      }, 3000);
+    }
+
+    // ── CANVAS MAPS ─────────────────────────────────────────────
+    function drawMap(id, heat) {
       const c = document.getElementById(id); if (!c) return;
       const p = c.parentElement; c.width = p.clientWidth || 200; c.height = p.clientHeight || 300;
-      const ctx = c.getContext('2d'); const w = c.width, h = c.height;
-      ctx.fillStyle = '#0c0802'; ctx.fillRect(0,0,w,h);
-      // streets
-      [[0,h*.3,w*.45,h*.28,w,h*.32],[0,h*.6,w,h*.62],[w*.35,0,w*.37,h],[w*.65,0,w*.67,h],[0,h*.12,w,h*.14]].forEach(s=>{
-        ctx.beginPath(); ctx.moveTo(s[0],s[1]);
-        for(let i=2;i<s.length;i+=2) ctx.lineTo(s[i],s[i+1]);
-        ctx.strokeStyle='rgba(255,180,60,0.1)'; ctx.lineWidth=1.5; ctx.stroke();
+      const ctx = c.getContext('2d'), w = c.width, h = c.height;
+      ctx.fillStyle = '#0c0802'; ctx.fillRect(0, 0, w, h);
+      [[0,h*.32,w*.45,h*.3,w,h*.34],[0,h*.6,w,h*.62],[w*.36,0,w*.38,h],[w*.64,0,w*.66,h]].forEach(s => {
+        ctx.beginPath(); ctx.moveTo(s[0],s[1]); for(let i=2;i<s.length;i+=2) ctx.lineTo(s[i],s[i+1]);
+        ctx.strokeStyle='rgba(255,180,60,.1)'; ctx.lineWidth=1.5; ctx.stroke();
       });
-      // buildings
-      [[.05,.05,.25,.2],[.4,.04,.6,.2],[.65,.05,.9,.22],[.05,.35,.28,.52],[.42,.34,.6,.52],[.64,.36,.92,.52],[.08,.66,.32,.82],[.4,.67,.62,.82],[.66,.66,.9,.82]].forEach(b=>{
-        ctx.fillStyle='rgba(255,180,40,0.03)'; ctx.strokeStyle='rgba(255,180,40,0.05)'; ctx.lineWidth=0.5;
+      [[.05,.05,.28,.2],[.4,.04,.62,.2],[.66,.05,.92,.22],[.05,.36,.3,.52],[.42,.34,.6,.52],[.64,.36,.9,.52]].forEach(b => {
+        ctx.fillStyle='rgba(255,180,40,.03)'; ctx.strokeStyle='rgba(255,180,40,.05)'; ctx.lineWidth=.5;
         ctx.fillRect(b[0]*w,b[1]*h,(b[2]-b[0])*w,(b[3]-b[1])*h); ctx.strokeRect(b[0]*w,b[1]*h,(b[2]-b[0])*w,(b[3]-b[1])*h);
       });
-      // heat
-      heatPts.forEach(pt => {
+      (heat||[{x:.38,y:.32,r:.28,i:1},{x:.62,y:.44,r:.2,i:.8},{x:.25,y:.55,r:.16,i:.6}]).forEach(pt => {
         const cx=pt.x*w,cy=pt.y*h,r=pt.r*Math.max(w,h);
         const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-        if(pt.i>.8){g.addColorStop(0,`rgba(255,55,10,${pt.i*.88})`);g.addColorStop(.3,`rgba(255,120,20,${pt.i*.62})`);g.addColorStop(.65,`rgba(255,180,40,${pt.i*.3})`);g.addColorStop(1,'rgba(0,0,0,0)');}
-        else if(pt.i>.5){g.addColorStop(0,`rgba(255,155,15,${pt.i*.82})`);g.addColorStop(.5,`rgba(255,195,55,${pt.i*.38})`);g.addColorStop(1,'rgba(0,0,0,0)');}
+        if(pt.i>.8){g.addColorStop(0,`rgba(255,55,10,${pt.i*.88})`);g.addColorStop(.3,`rgba(255,120,20,${pt.i*.6})`);g.addColorStop(.65,`rgba(255,180,40,${pt.i*.28})`);g.addColorStop(1,'rgba(0,0,0,0)');}
+        else if(pt.i>.5){g.addColorStop(0,`rgba(255,155,15,${pt.i*.82})`);g.addColorStop(.5,`rgba(255,195,55,${pt.i*.36})`);g.addColorStop(1,'rgba(0,0,0,0)');}
         else{g.addColorStop(0,`rgba(180,130,40,${pt.i*.7})`);g.addColorStop(1,'rgba(0,0,0,0)');}
         ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
       });
-      // bokeh dots
-      for(let i=0;i<50;i++){
-        const bx=Math.random()*w,by=Math.random()*h,br=.8+Math.random()*2.5;
+      for(let i=0;i<55;i++){
+        const bx=Math.random()*w,by=Math.random()*h,br=.5+Math.random()*2;
         const bg=ctx.createRadialGradient(bx,by,0,bx,by,br*5);
-        bg.addColorStop(0,'rgba(255,200,80,0.85)'); bg.addColorStop(1,'rgba(0,0,0,0)');
+        bg.addColorStop(0,'rgba(255,200,80,.85)'); bg.addColorStop(1,'rgba(0,0,0,0)');
         ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(bx,by,br*5,0,Math.PI*2); ctx.fill();
       }
     }
 
-    // Canvas: club glow for Vibe Check
     function drawClub(id) {
       const c = document.getElementById(id); if (!c) return;
-      const p = c.parentElement; c.width = p.clientWidth||220; c.height = p.clientHeight||210;
-      const ctx = c.getContext('2d'); const w=c.width,h=c.height;
+      const p = c.parentElement; c.width = p.clientWidth||224; c.height = p.clientHeight||210;
+      const ctx = c.getContext('2d'), w=c.width, h=c.height;
       ctx.fillStyle='#060406'; ctx.fillRect(0,0,w,h);
-      [{x:.25,y:.4,r:.55,col:'rgba(255,90,15,0.55)'},{x:.72,y:.55,r:.42,col:'rgba(140,35,190,0.45)'},{x:.5,y:.15,r:.38,col:'rgba(255,190,40,0.32)'},{x:.08,y:.72,r:.3,col:'rgba(220,50,30,0.38)'}].forEach(b=>{
+      [{x:.25,y:.4,r:.55,col:'255,90,15'},{x:.72,y:.55,r:.42,col:'140,35,190'},{x:.5,y:.15,r:.38,col:'255,190,40'}].forEach(b => {
         const g=ctx.createRadialGradient(b.x*w,b.y*h,0,b.x*w,b.y*h,b.r*Math.max(w,h));
-        g.addColorStop(0,b.col); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+        g.addColorStop(0,`rgba(${b.col},.5)`); g.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
       });
-      // silhouettes
-      ctx.fillStyle='rgba(0,0,0,0.5)';
-      for(let i=0;i<14;i++){
-        const sx=(i/14)*w+(Math.random()-.5)*8, sh=28+Math.random()*18;
-        ctx.beginPath(); ctx.ellipse(sx,h-sh/2+8,6+Math.random()*4,sh/2,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(0,0,0,.45)';
+      for(let i=0;i<16;i++){
+        const sx=(i/16)*w+(Math.random()-.5)*10,sh=35+Math.random()*20;
+        ctx.beginPath(); ctx.ellipse(sx,h-sh/2+10,7+Math.random()*4,sh/2,0,0,Math.PI*2); ctx.fill();
       }
     }
 
-    // Vibe score animation
-    function animVs() {
-      const el=document.getElementById('vs2'), bar=document.getElementById('vsb2');
-      if(!el||!bar) return;
-      setInterval(()=>{
-        const cur=parseInt(el.textContent);
-        const next=Math.min(99,Math.max(72,cur+Math.floor(Math.random()*7)-2));
-        el.textContent=next; bar.style.width=next+'%';
-      },3000);
+    // ── IN-APP NAVIGATION ───────────────────────────────────────
+    let navState = {
+      open: false,
+      mode: 'driving',
+      watching: null,
+      userPos: null,
+      destName: '',
+      destAddress: '',
+      navigating: false,
+      routeCoords: null,
+      progress: 0
+    };
+
+    // Simulated destination coords (London example — replace with geocoded values in production)
+    const DEST_LAT = 51.5219;
+    const DEST_LNG = -0.0866;
+
+    function openNavModal(name, address) {
+      navState.destName = name;
+      navState.destAddress = address;
+      document.getElementById('navModalTitle').textContent = 'Directions to ' + name;
+      document.getElementById('navModalSub').textContent = address;
+      document.getElementById('navModal').classList.add('open');
+      document.getElementById('navLocErr').style.display = 'none';
+      document.getElementById('navHud').classList.remove('active');
+      document.getElementById('btnStartNav').innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Navigation`;
+      navState.navigating = false;
+      navState.progress = 0;
+      getUserLocation();
+      drawNavMap(null, null);
     }
 
-    function init() {
-      drawMap('c1',[{x:.38,y:.32,r:.28,i:1.0},{x:.61,y:.46,r:.22,i:.82},{x:.24,y:.58,r:.18,i:.6},{x:.72,y:.2,r:.13,i:.44}]);
-      drawMap('c2',[{x:.5,y:.44,r:.32,i:.88},{x:.28,y:.62,r:.2,i:.55}]);
-      drawClub('cvc');
-      animVs();
+    function closeNavModal() {
+      document.getElementById('navModal').classList.remove('open');
+      stopNavigation();
     }
+
+    function setTravelMode(mode, btn) {
+      navState.mode = mode;
+      document.querySelectorAll('.travel-mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (navState.userPos) fetchRoute(navState.userPos.lat, navState.userPos.lng);
+    }
+
+    function getUserLocation() {
+      document.getElementById('navMapStatus').textContent = 'Detecting location…';
+      if (!navigator.geolocation) {
+        showLocError('Geolocation is not supported by your browser.');
+        setSimulatedRoute();
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          navState.userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          document.getElementById('navMapStatus').textContent = 'Location found';
+          fetchRoute(navState.userPos.lat, navState.userPos.lng);
+        },
+        err => {
+          // Graceful fallback — use simulated position
+          setSimulatedRoute();
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    }
+
+    async function fetchRoute(userLat, userLng) {
+      document.getElementById('navMapStatus').textContent = 'Calculating route…';
+      // If Mapbox token is available, use real API
+      if (MAPBOX_TOKEN) {
+        try {
+          const profile = navState.mode === 'driving' ? 'mapbox/driving' :
+                          navState.mode === 'walking' ? 'mapbox/walking' : 'mapbox/driving';
+          const url = `https://api.mapbox.com/directions/v5/${profile}/${userLng},${userLat};${DEST_LNG},${DEST_LAT}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data.routes && data.routes[0]) {
+            const route = data.routes[0];
+            const durationMin = Math.round(route.duration / 60);
+            const distKm = (route.distance / 1000).toFixed(1);
+            updateRouteInfo(durationMin, distKm);
+            navState.routeCoords = route.geometry.coordinates;
+            drawNavMap(userLat, userLng, route.geometry.coordinates);
+            return;
+          }
+        } catch(e) { /* fall through to simulation */ }
+      }
+      // Fallback: simulate route data
+      setSimulatedRoute(userLat, userLng);
+    }
+
+    function setSimulatedRoute(userLat, userLng) {
+      const modes = { driving: { time: 12, dist: 2.4 }, walking: { time: 28, dist: 2.1 }, transit: { time: 18, dist: 2.3 } };
+      const m = modes[navState.mode];
+      updateRouteInfo(m.time, m.dist);
+      drawNavMap(userLat || 51.508, userLng || -0.1, null);
+      document.getElementById('navMapStatus').textContent = navState.mode === 'walking' ? 'Walking route' : navState.mode === 'transit' ? 'Transit route' : 'Driving route';
+    }
+
+    function updateRouteInfo(durationMin, distKm) {
+      document.getElementById('routeTime').textContent = durationMin + ' min';
+      document.getElementById('routeDist').textContent = distKm + ' km';
+      const arr = new Date(Date.now() + durationMin * 60000);
+      document.getElementById('routeArrival').textContent = arr.getHours() + ':' + String(arr.getMinutes()).padStart(2,'0');
+      document.getElementById('hudEta').textContent = durationMin + ' min';
+      document.getElementById('hudDist').textContent = distKm + ' km away';
+    }
+
+    function drawNavMap(userLat, userLng, routeCoords) {
+      const canvas = document.getElementById('navCanvas');
+      const container = document.getElementById('navMapArea');
+      canvas.width = container.clientWidth || 452;
+      canvas.height = container.clientHeight || 200;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+
+      // Dark map background
+      ctx.fillStyle = '#0a0a14';
+      ctx.fillRect(0, 0, w, h);
+
+      // Grid streets
+      ctx.strokeStyle = 'rgba(255,180,60,.07)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 8; i++) {
+        ctx.beginPath(); ctx.moveTo(0, (i/8)*h); ctx.lineTo(w, (i/8)*h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo((i/8)*w, 0); ctx.lineTo((i/8)*w, h); ctx.stroke();
+      }
+      // Main roads
+      ctx.strokeStyle = 'rgba(255,180,60,.13)';
+      ctx.lineWidth = 2;
+      [[0,h*.4,w,h*.38],[0,h*.7,w,h*.68],[w*.3,0,w*.32,h],[w*.65,0,w*.67,h]].forEach(r => {
+        ctx.beginPath(); ctx.moveTo(r[0],r[1]); ctx.lineTo(r[2],r[3]); ctx.stroke();
+      });
+
+      // Blocks
+      ctx.fillStyle = 'rgba(255,180,40,.04)';
+      [[.05,.1,.25,.3],[.35,.1,.6,.3],[.65,.1,.9,.3],[.05,.45,.25,.65],[.35,.45,.6,.65]].forEach(b => {
+        ctx.fillRect(b[0]*w,b[1]*h,(b[2]-b[0])*w,(b[3]-b[1])*h);
+      });
+
+      // Route polyline
+      const origin = { x: w * 0.15, y: h * 0.75 };
+      const dest = { x: w * 0.82, y: h * 0.28 };
+
+      if (routeCoords && routeCoords.length > 1) {
+        // Real coordinates — normalize to canvas space
+        const lngs = routeCoords.map(c=>c[0]), lats = routeCoords.map(c=>c[1]);
+        const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
+        const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+        ctx.beginPath();
+        routeCoords.forEach((c, i) => {
+          const px = ((c[0]-minLng)/(maxLng-minLng||1)) * (w*0.8) + w*0.1;
+          const py = h - ((c[1]-minLat)/(maxLat-minLat||1)) * (h*0.8) - h*0.1;
+          i === 0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+        });
+        ctx.strokeStyle = 'rgba(245,166,35,.25)'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.strokeStyle = 'rgba(245,166,35,.9)'; ctx.lineWidth = 2; ctx.setLineDash([6,4]); ctx.stroke();
+        ctx.setLineDash([]);
+      } else {
+        // Simulated route — curved bezier
+        ctx.beginPath();
+        ctx.moveTo(origin.x, origin.y);
+        ctx.bezierCurveTo(origin.x + 60, origin.y - 40, dest.x - 80, dest.y + 60, dest.x, dest.y);
+        ctx.strokeStyle = 'rgba(245,166,35,.25)'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(origin.x, origin.y);
+        ctx.bezierCurveTo(origin.x + 60, origin.y - 40, dest.x - 80, dest.y + 60, dest.x, dest.y);
+        ctx.strokeStyle = 'rgba(245,166,35,.85)'; ctx.lineWidth = 2; ctx.setLineDash([6,4]); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // User dot (origin)
+      const upt = navState.navigating ? { x: origin.x + (dest.x-origin.x)*navState.progress, y: origin.y + (dest.y-origin.y)*navState.progress } : origin;
+      ctx.beginPath(); ctx.arc(upt.x, upt.y, 7, 0, Math.PI*2);
+      ctx.fillStyle = '#4a90ff'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 2; ctx.stroke();
+      // Pulse ring
+      ctx.beginPath(); ctx.arc(upt.x, upt.y, 13, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(74,144,255,.3)'; ctx.lineWidth = 2; ctx.stroke();
+
+      // Destination pin
+      ctx.beginPath();
+      ctx.arc(dest.x, dest.y, 8, 0, Math.PI*2);
+      ctx.fillStyle = 'var(--gold)' ; ctx.fillStyle = '#f5a623'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2; ctx.stroke();
+      // Destination label
+      ctx.fillStyle = 'rgba(245,166,35,.9)';
+      ctx.font = 'bold 9px sans-serif';
+      ctx.fillText('Lotus', dest.x + 11, dest.y + 3);
+    }
+
+    function startLiveNavigation() {
+      if (navState.navigating) {
+        stopNavigation();
+        return;
+      }
+      navState.navigating = true;
+      document.getElementById('navHud').classList.add('active');
+      document.getElementById('btnStartNav').innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        Stop Navigation`;
+
+      // Start watching position
+      if (navigator.geolocation) {
+        navState.watching = navigator.geolocation.watchPosition(
+          pos => {
+            navState.userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            // Recalculate remaining distance
+            const dist = haversine(pos.coords.latitude, pos.coords.longitude, DEST_LAT, DEST_LNG);
+            const distKm = dist.toFixed(1);
+            const modeSpeed = navState.mode === 'driving' ? 30 : navState.mode === 'walking' ? 5 : 20; // km/h
+            const etaMin = Math.round((dist / modeSpeed) * 60);
+            document.getElementById('hudDist').textContent = distKm + ' km';
+            document.getElementById('hudEta').textContent = etaMin + ' min';
+            drawNavMap(pos.coords.latitude, pos.coords.longitude, navState.routeCoords);
+          },
+          err => {},
+          { enableHighAccuracy: true, maximumAge: 3000 }
+        );
+      }
+
+      // Animate simulated progress
+      let tick = 0;
+      navState._interval = setInterval(() => {
+        tick += 0.4;
+        navState.progress = Math.min(0.98, tick / 100);
+        document.getElementById('hudProgress').style.width = (navState.progress * 100) + '%';
+        const remainMin = Math.max(0, Math.round(12 * (1 - navState.progress)));
+        document.getElementById('hudEta').textContent = remainMin + ' min';
+        const step = navState.progress < 0.3 ? 'Head north on City Road' :
+                     navState.progress < 0.6 ? 'Turn right onto Main Street' :
+                     navState.progress < 0.85 ? 'Continue for 0.3 km' : 'Arriving at destination';
+        document.getElementById('hudNextStep').textContent = step;
+        drawNavMap(null, null, null);
+        if (navState.progress >= 0.98) { clearInterval(navState._interval); document.getElementById('hudNextStep').textContent = 'You have arrived'; }
+      }, 800);
+    }
+
+    function stopNavigation() {
+      navState.navigating = false;
+      navState.progress = 0;
+      if (navState.watching && navigator.geolocation) navigator.geolocation.clearWatch(navState.watching);
+      if (navState._interval) clearInterval(navState._interval);
+      document.getElementById('navHud').classList.remove('active');
+    }
+
+    function openInMaps() {
+      const dest = encodeURIComponent(navState.destName + ' ' + navState.destAddress);
+      const url = navState.userPos
+        ? `https://www.google.com/maps/dir/${navState.userPos.lat},${navState.userPos.lng}/${dest}`
+        : `https://www.google.com/maps/search/${dest}`;
+      window.open(url, '_blank');
+    }
+
+    function showLocError(msg) {
+      const el = document.getElementById('navLocErr');
+      el.style.display = 'block';
+      el.querySelector('svg').nextSibling.textContent = ' ' + msg;
+    }
+
+    function haversine(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2-lat1)*Math.PI/180;
+      const dLng = (lng2-lng1)*Math.PI/180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // Close modal on overlay click
+    document.getElementById('navModal').parentElement.addEventListener('click', e => {
+      if (e.target === document.getElementById('navModal').parentElement) closeNavModal();
+    });
+
+    // ── INIT ────────────────────────────────────────────────────
+    function init() {
+      drawMap('c1', null);
+      drawMap('c2', [{x:.5,y:.44,r:.32,i:.88},{x:.28,y:.62,r:.2,i:.55}]);
+      drawClub('cvc');
+      animVS();
+    }
+
     setTimeout(init, 150);
     window.addEventListener('resize', init);
   </script>
