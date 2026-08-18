@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
@@ -773,21 +774,36 @@
 
       <div class="form-card reveal d2" id="form-wrap">
 
-        <!-- Step 1 — Email -->
+        <!-- Step 1 — Sign in -->
         <div id="step1">
           <div class="step-indicator">
             <div class="step-dot-f active"></div>
             <div class="step-dot-f"></div>
           </div>
-          <label class="form-label" for="wl-email">Your Email Address</label>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <input class="form-input" type="email" id="wl-email" placeholder="you@example.com" required autocomplete="email" style="flex:1;min-width:200px;"/>
-            <button onclick="submitStep1()" class="btn-primary" style="white-space:nowrap;padding:15px 28px;">
-              Continue
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
+          <div style="text-align:center;margin-bottom:24px;">
+            <div style="font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-.02em;">Sign in to apply</div>
+            <div style="font-size:.88rem;color:var(--mist);">Takes 10 seconds — no password to remember.</div>
           </div>
-          <p class="err-msg" id="err-msg">Please enter a valid email address.</p>
+          <button onclick="signInWithGoogle()" class="btn-primary" style="width:100%;padding:15px;justify-content:center;margin-bottom:12px;background:#fff;color:#1a1a1a;box-shadow:none;">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+          <div id="email-fallback">
+            <button onclick="toggleEmailInput()" style="display:block;width:100%;background:none;border:none;color:var(--dim);font-size:.82rem;cursor:pointer;font-family:var(--font-b);padding:8px;text-align:center;">Continue with email instead</button>
+            <div id="email-input-row" style="display:none;margin-top:8px;">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <input class="form-input" type="email" id="wl-email" placeholder="you@example.com" required autocomplete="email" style="flex:1;min-width:200px;"/>
+                <button onclick="signInWithEmail()" class="btn-primary" style="white-space:nowrap;padding:15px 28px;">
+                  Send link
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+              <p class="err-msg" id="err-msg">Please enter a valid email address.</p>
+            </div>
+          </div>
+          <div id="magic-link-sent" style="display:none;text-align:center;padding:16px 0;">
+            <div style="font-size:.9rem;color:var(--mist);">Check your inbox — we sent a sign-in link to <strong style="color:var(--cream);" id="sent-to-email"></strong>.</div>
+          </div>
         </div>
 
         <!-- Step 2 — Profile + Phone -->
@@ -802,6 +818,35 @@
             </div>
             <div style="font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-.02em;">Almost there.</div>
             <div style="font-size:.88rem;color:var(--mist);">Help us personalise your experience.</div>
+          </div>
+
+          <!-- ── ROLE ── -->
+          <div style="margin-bottom:20px;">
+            <label class="form-label" for="wl-role">What best describes you?</label>
+            <select class="form-input" id="wl-role" onchange="onRoleChange()">
+              <option value="">Select…</option>
+              <option value="bartender">Bartender</option>
+              <option value="event_promoter">Event Promoter</option>
+              <option value="venue_owner">Venue Owner</option>
+              <option value="event_owner">Event Owner</option>
+              <option value="production_lead">Production / Operations Lead</option>
+              <option value="patron">Just here as a patron</option>
+            </select>
+          </div>
+
+          <!-- ── DECISION MAKER (hidden for patrons) ── -->
+          <div id="decision-maker-row" style="margin-bottom:20px;display:none;">
+            <label class="form-label">Do you make decisions about marketing or investment spend for your venue/events?</label>
+            <div style="display:flex;gap:10px;">
+              <button type="button" class="dm-choice btn-outline" data-val="true" onclick="selectDecisionMaker(this)" style="flex:1;justify-content:center;">Yes</button>
+              <button type="button" class="dm-choice btn-outline" data-val="false" onclick="selectDecisionMaker(this)" style="flex:1;justify-content:center;">No</button>
+            </div>
+          </div>
+
+          <!-- ── VENUE / EVENT NAME (hidden for patrons) ── -->
+          <div id="venue-name-row" style="margin-bottom:20px;display:none;">
+            <label class="form-label" for="wl-venue">Name of your venue, business, or events brand</label>
+            <input class="form-input" type="text" id="wl-venue" placeholder="e.g. Lotus Lounge"/>
           </div>
 
           <!-- ── PHONE NUMBER FIELD ── -->
@@ -832,22 +877,9 @@
             </div>
           </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-            <div>
-              <label class="form-label" for="wl-city">Your City</label>
-              <input class="form-input" type="text" id="wl-city" placeholder="e.g. London"/>
-            </div>
-            <div>
-              <label class="form-label" for="wl-type">I am a</label>
-              <select class="form-input" id="wl-type">
-                <option value="">Select…</option>
-                <option value="patron">Patron / Party Goer</option>
-                <option value="promoter">Promoter / Organiser</option>
-                <option value="venue">Venue Owner</option>
-                <option value="artist">Artist / DJ</option>
-              </select>
-            </div>
-          </div>
+          <label class="form-label" for="wl-city">Your City</label>
+          <input class="form-input" type="text" id="wl-city" placeholder="e.g. London" style="margin-bottom:20px;"/>
+
           <div class="form-divider"></div>
           <label class="form-label">Favourite Genres</label>
           <div class="genre-wrap" id="genre-tags" style="margin-bottom:20px;">
@@ -861,10 +893,9 @@
             <span class="gtag" data-val="rnb" onclick="toggleTag(this)">R&amp;B</span>
           </div>
           <button onclick="submitStep2()" class="btn-primary" style="width:100%;padding:16px;justify-content:center;margin-bottom:10px;">
-            Secure My Spot
+            Submit Application
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
-          <button onclick="submitStep2(true)" style="display:block;width:100%;background:none;border:none;color:var(--dim);font-size:.8rem;cursor:pointer;font-family:var(--font-b);padding:8px;">Skip — just add my email</button>
         </div>
 
         <!-- Success -->
@@ -942,9 +973,62 @@
 
   <script>
     // ── CONFIG ──────────────────────────────────────────────────
-    const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/27613010/4yv2wkd/';
     // To enable real routing, add your Mapbox token below:
     const MAPBOX_TOKEN = ''; // e.g. 'pk.eyJ1IjoiYmFzaG1lbnQ...'
+
+    // ── SUPABASE ────────────────────────────────────────────────
+    const SUPABASE_URL = 'https://bdeubrllozvxyhjkumzo.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_LHYVyIyyprtu3UvpGemeEg_i2DAg2Io';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+
+    async function initAuth() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        currentUser = session.user;
+        onSignedIn();
+      }
+      sb.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          currentUser = session.user;
+          onSignedIn();
+        }
+      });
+    }
+
+    function onSignedIn() {
+      // Auto-fill what we already know from the provider (Google gives name+email verified)
+      wlEmail = currentUser.email || '';
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    }
+
+    async function signInWithGoogle() {
+      await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href.split('#')[0] }
+      });
+    }
+
+    function toggleEmailInput() {
+      document.getElementById('email-input-row').style.display = 'block';
+    }
+
+    async function signInWithEmail() {
+      const input = document.getElementById('wl-email');
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('Please enter a valid email address.'); input.focus(); return; }
+      document.getElementById('err-msg').style.display = 'none';
+      const { error } = await sb.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href.split('#')[0] }
+      });
+      if (error) { showErr('Something went wrong sending the link. Please try again.'); return; }
+      document.getElementById('email-fallback').style.display = 'none';
+      document.getElementById('magic-link-sent').style.display = 'block';
+      document.getElementById('sent-to-email').textContent = email;
+    }
 
     // ── REVEAL ON SCROLL ────────────────────────────────────────
     const ro = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), { threshold:.07, rootMargin:'0px 0px -20px 0px' });
@@ -956,20 +1040,26 @@
     // ── FORM STATE ──────────────────────────────────────────────
     let wlEmail = '';
     let selectedGenres = [];
+    let selectedDecisionMaker = null; // true / false / null
 
     function showErr(msg) {
       const el = document.getElementById('err-msg');
       el.textContent = msg; el.style.display = 'block';
     }
 
-    function submitStep1() {
-      const input = document.getElementById('wl-email');
-      const email = input.value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('Please enter a valid email address.'); input.focus(); return; }
-      wlEmail = email;
-      document.getElementById('err-msg').style.display = 'none';
-      document.getElementById('step1').style.display = 'none';
-      document.getElementById('step2').style.display = 'block';
+    function onRoleChange() {
+      const role = document.getElementById('wl-role').value;
+      const isPatron = role === 'patron';
+      document.getElementById('decision-maker-row').style.display = (role && !isPatron) ? 'block' : 'none';
+      document.getElementById('venue-name-row').style.display = (role && !isPatron) ? 'block' : 'none';
+    }
+
+    function selectDecisionMaker(btn) {
+      selectedDecisionMaker = btn.dataset.val === 'true';
+      document.querySelectorAll('.dm-choice').forEach(b => {
+        b.style.background = 'transparent'; b.style.color = 'var(--gold)';
+      });
+      btn.style.background = 'var(--gold)'; btn.style.color = '#0a0600';
     }
 
     function toggleTag(el) {
@@ -983,50 +1073,56 @@
       }
     }
 
-    async function submitStep2(skip = false) {
+    async function submitStep2() {
+      const role = document.getElementById('wl-role').value;
+      if (!role) { alert('Please select what best describes you.'); return; }
+
+      const isPatron = role === 'patron';
       const dialCode = document.getElementById('wl-dialcode').value.replace('-CA','').replace('-IE','');
       const phoneRaw = document.getElementById('wl-phone').value.trim().replace(/[\s\-()]/g,'');
       const phone = phoneRaw ? dialCode + phoneRaw : '';
-      const hasPhone = !!phone;
+
+      // Qualification logic: any non-patron role who confirms decision-making authority qualifies.
+      // Non-patron roles without an explicit "No" also pass (bartenders etc. still have on-the-ground influence),
+      // only an explicit decision_maker=false or patron role disqualifies.
+      const qualified = !isPatron && selectedDecisionMaker !== false;
 
       const payload = {
+        user_id: currentUser.id,
         email: wlEmail,
+        full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || '',
         phone: phone,
-        city: skip ? '' : (document.getElementById('wl-city').value.trim() || ''),
-        user_type: skip ? '' : (document.getElementById('wl-type').value || ''),
-        genres: skip ? '' : selectedGenres.join(', '),
-        timestamp: new Date().toISOString(),
-        source: 'landing_page_waitlist',
-        send_welcome_email: true,
-        send_welcome_sms: hasPhone
+        city: document.getElementById('wl-city').value.trim() || '',
+        role: role,
+        decision_maker: isPatron ? null : selectedDecisionMaker,
+        venue_or_event_name: isPatron ? '' : (document.getElementById('wl-venue').value.trim() || ''),
+        genres: selectedGenres.join(', '),
+        qualified: qualified,
+        status: qualified ? 'approved' : 'waitlisted'
       };
 
       try {
-        await fetch(ZAPIER_WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-        showSuccess(hasPhone);
-      } catch(err) {
-        if (!ZAPIER_WEBHOOK || ZAPIER_WEBHOOK.includes('YOUR_HOOK_ID_HERE')) {
-          showSuccess(hasPhone);
-        } else {
-          document.getElementById('step2').style.display = 'none';
-          document.getElementById('step-error').style.display = 'block';
-        }
+        const { error } = await sb.from('beta_applicants').insert(payload);
+        if (error) throw error;
+        showSuccess(qualified);
+      } catch (err) {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step-error').style.display = 'block';
       }
     }
 
-    function showSuccess(hasPhone) {
+    function showSuccess(qualified) {
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'none';
       document.getElementById('step-success').style.display = 'block';
-      if (hasPhone) {
-        document.getElementById('success-msg').textContent = "We'll hit you first when Bashment drops in your city. Check your inbox and your phone — welcome text on its way.";
-      }
+      document.getElementById('success-msg').textContent = qualified
+        ? "You're in — welcome to the Bashment beta. We'll be in touch shortly with next steps."
+        : "Thanks for signing up! Bashment is launching soon — we'll keep you posted.";
     }
 
     function retryForm() {
       document.getElementById('step-error').style.display = 'none';
-      document.getElementById('step1').style.display = 'block';
-      document.getElementById('wl-email').value = wlEmail;
+      document.getElementById('step2').style.display = 'block';
     }
 
     // ── VIBE SCORE ANIMATION ────────────────────────────────────
@@ -1369,6 +1465,7 @@
 
     setTimeout(init, 150);
     window.addEventListener('resize', init);
+    initAuth();
   </script>
 </body>
 </html>
