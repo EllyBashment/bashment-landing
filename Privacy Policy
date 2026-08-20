@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy — Bashment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#050509;color:#f0e6cc}
+:root{--gold:#f5a623;--gold2:#ffcc55;--bg:#08060a;--s1:#121016;--cream:#f0e6cc;--mist:rgba(240,230,204,.58);--dim:rgba(240,230,204,.32);--fd:'Sora',sans-serif;--fb:'Space Grotesk',sans-serif}
+body{font-family:var(--fb)}
+.top{height:58px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(8,6,10,.92);backdrop-filter:blur(18px);position:sticky;top:0;z-index:50;}
+.logo{font:800 21px var(--fd);color:#fff;letter-spacing:-.05em;text-decoration:none;}
+.logo span{color:var(--gold);}
+.wrap{max-width:640px;margin:0 auto;padding:32px 20px 100px;}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:8px;}
+.h1{font:800 26px var(--fd);letter-spacing:-.04em;color:#fff;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--mist);line-height:1.6;}
+.notice{border-left:3px solid var(--gold);padding:12px 14px;background:rgba(245,166,35,.06);font-size:11px;line-height:1.6;color:var(--mist);border-radius:0 10px 10px 0;margin:20px 0 28px;}
+.card{background:rgba(255,255,255,.045);border:1px solid rgba(245,166,35,.14);border-radius:15px;padding:16px;margin-bottom:14px;}
+.card .eyebrow{margin-bottom:4px;}
+.card h2{font:700 15px var(--fd);color:#fff;margin:14px 0 6px;}
+.card h2:first-child{margin-top:0;}
+.card p{font-size:12.5px;color:var(--mist);line-height:1.7;margin-bottom:8px;}
+.card ul{padding-left:18px;margin-bottom:10px;}
+.card li{font-size:12.5px;color:var(--mist);line-height:1.7;margin-bottom:4px;}
+.metricline{display:flex;flex-direction:column;gap:2px;font-size:11.5px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.metricline:last-child{border-bottom:0;}
+.metricline b{color:var(--gold);font:700 10px var(--fd);text-transform:uppercase;letter-spacing:.05em;}
+.metricline span{color:var(--mist);line-height:1.5;}
+a{color:var(--gold);}
+.footer-nav{margin-top:24px;text-align:center;}
+.footer-nav a{margin:0 12px;font-size:11px;color:var(--dim);text-decoration:none;}
+.footer-nav a:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="top"><a href="/" class="logo">Bash<span>ment</span></a></div>
+<div class="wrap">
+  <div class="eyebrow">Legal</div>
+  <div class="h1">Privacy Policy</div>
+  <div class="sub">Last updated: August 20, 2026</div>
+  <div class="notice">This document was drafted to accurately reflect what Bashment currently collects and does with data. It has not been reviewed by a lawyer.</div>
+
+  <div class="card">
+    <h2>1. Who We Are</h2>
+    <p>Bashment ("Bashment," "we," "us") operates a beta platform connecting nightlife promoters and patrons in Jamaica and the New York metro area, accessible at bashment.app and beta.bashment.app.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Information We Collect</h2>
+    <h2>2.1 Account Information</h2>
+    <p>When you sign in with Google, we receive your name, email address, and profile photo from Google. We do not receive your Google password.</p>
+    <h2>2.2 Beta Signup Information</h2>
+    <p>If you signed up for early access, we collected your email, name, phone number, city, your role (e.g., promoter, bartender, venue owner), whether you make marketing/investment decisions for your venue or events, your venue or brand name, and your music genre preferences.</p>
+    <h2>2.3 Event Content</h2>
+    <p>If you create an event on Bashment, we store the event title, venue name, address, geographic coordinates (derived from the address), date, genre tags, and any flyer image you upload. If you mark an event "Private," it is not shown on the public map or in search — only people with the direct link can view it.</p>
+    <h2>2.4 Location Information</h2>
+    <p>With your permission, we access your device's location to center the map near you and calculate distance/directions to events. This location is used in your browser session and is not stored on our servers.</p>
+    <h2>2.5 Usage Information</h2>
+    <p>We track basic view counts on published events (how many times an event page was viewed) to help promoters understand interest in their events. This is an aggregate count, not tied to individual viewer identities.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. How We Use Information</h2>
+    <ul>
+      <li>Operate your account and let you sign in</li>
+      <li>Let you create, edit, and manage events</li>
+      <li>Show relevant nearby and genre-matched events</li>
+      <li>Provide directions to events</li>
+      <li>Understand engagement with events (view counts) to improve the product and, in the future, determine features available to different membership tiers</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Third-Party Services</h2>
+    <p>We rely on the following service providers to operate Bashment. Each has access to relevant data only as needed to provide their service to us:</p>
+    <div class="metricline"><b>Google</b><span>Sign-in — sees your name, email, and profile photo</span></div>
+    <div class="metricline"><b>Supabase (hosted on AWS)</b><span>Database, authentication, file storage — sees all account, event, and flyer data</span></div>
+    <div class="metricline"><b>Mapbox</b><span>Maps, address lookup, directions, and populating the map with nearby businesses (bars, clubs, lounges) — sees event addresses and your approximate location during use. Business/venue data shown on the map is sourced from Mapbox directly and is not personal data about you</span></div>
+    <div class="metricline"><b>Anthropic</b><span>AI-assisted flyer text extraction — sees flyer images you upload, only when you use the "Upload Flyer" auto-extraction feature</span></div>
+    <div class="metricline"><b>Vercel</b><span>Website hosting — sees standard web request data (IP address, browser type)</span></div>
+  </div>
+
+  <div class="card">
+    <h2>5. Data Sharing</h2>
+    <p>We do not sell your personal information. Published (non-private) event details are, by design, visible to anyone using Bashment or visiting a shared event link — that's the intended public function of a published event listing.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Data Retention &amp; Deletion</h2>
+    <p>We retain your information for as long as your account is active. You can request deletion of your account and associated data by contacting us at <a href="mailto:info@bashment.app">info@bashment.app</a>. Deleting an event removes its data, including any attached flyer image, from our systems.</p>
+  </div>
+
+  <div class="card">
+    <h2>7. Your Rights</h2>
+    <p>Depending on where you live, you may have rights to access, correct, or delete your personal information, and to object to certain uses of it. To exercise these rights, contact us at <a href="mailto:info@bashment.app">info@bashment.app</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Children's Privacy</h2>
+    <p>Bashment is intended for users 18 years of age or older, consistent with its nightlife/event focus. We do not knowingly collect information from anyone under 18.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. International Data Transfers</h2>
+    <p>Because our service providers are based in the United States, information from users in Jamaica (and elsewhere) is transferred to and processed in the United States.</p>
+  </div>
+
+  <div class="card">
+    <h2>10. Changes to This Policy</h2>
+    <p>We may update this policy as Bashment's features evolve, particularly as we introduce paid subscription tiers. We will update the "Last updated" date above when changes are made.</p>
+  </div>
+
+  <div class="card">
+    <h2>11. Contact Us</h2>
+    <p>Questions about this policy can be directed to <a href="mailto:info@bashment.app">info@bashment.app</a>.</p>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/">Home</a>
+    <a href="/terms.html">Terms of Service</a>
+  </div>
+</div>
+</body>
+</html>
