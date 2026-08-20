@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Terms of Service — Bashment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#050509;color:#f0e6cc}
+:root{--gold:#f5a623;--gold2:#ffcc55;--bg:#08060a;--s1:#121016;--cream:#f0e6cc;--mist:rgba(240,230,204,.58);--dim:rgba(240,230,204,.32);--fd:'Sora',sans-serif;--fb:'Space Grotesk',sans-serif}
+body{font-family:var(--fb)}
+.top{height:58px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(8,6,10,.92);backdrop-filter:blur(18px);position:sticky;top:0;z-index:50;}
+.logo{font:800 21px var(--fd);color:#fff;letter-spacing:-.05em;text-decoration:none;}
+.logo span{color:var(--gold);}
+.wrap{max-width:640px;margin:0 auto;padding:32px 20px 100px;}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:8px;}
+.h1{font:800 26px var(--fd);letter-spacing:-.04em;color:#fff;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--mist);line-height:1.6;}
+.notice{border-left:3px solid var(--gold);padding:12px 14px;background:rgba(245,166,35,.06);font-size:11px;line-height:1.6;color:var(--mist);border-radius:0 10px 10px 0;margin:20px 0 28px;}
+.card{background:rgba(255,255,255,.045);border:1px solid rgba(245,166,35,.14);border-radius:15px;padding:16px;margin-bottom:14px;}
+.card h2{font:700 15px var(--fd);color:#fff;margin:14px 0 6px;}
+.card h2:first-child{margin-top:0;}
+.card p{font-size:12.5px;color:var(--mist);line-height:1.7;margin-bottom:8px;}
+.card ul{padding-left:18px;margin-bottom:10px;}
+.card li{font-size:12.5px;color:var(--mist);line-height:1.7;margin-bottom:4px;}
+a{color:var(--gold);}
+.footer-nav{margin-top:24px;text-align:center;}
+.footer-nav a{margin:0 12px;font-size:11px;color:var(--dim);text-decoration:none;}
+.footer-nav a:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="top"><a href="/" class="logo">Bash<span>ment</span></a></div>
+<div class="wrap">
+  <div class="eyebrow">Legal</div>
+  <div class="h1">Terms of Service</div>
+  <div class="sub">Last updated: August 20, 2026</div>
+  <div class="notice">This document was drafted to accurately reflect Bashment's current features. It has not been reviewed by a lawyer. Subscription terms (billing, cancellation, refunds) are not yet included and will need to be added when that launches.</div>
+
+  <div class="card">
+    <h2>1. Acceptance of Terms</h2>
+    <p>By creating an account or using Bashment, you agree to these Terms of Service and our <a href="/privacy.html">Privacy Policy</a>. Bashment is currently in beta — features, availability, and functionality may change without notice.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Eligibility</h2>
+    <p>You must be at least 18 years old to use Bashment. By using the service, you represent that you meet this requirement.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Accounts</h2>
+    <p>You sign in to Bashment using your Google account. You are responsible for maintaining the security of that account and for all activity that occurs under it.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Beta Service</h2>
+    <p>Bashment is provided as a beta product. It may contain bugs, experience downtime, or change significantly during this period. We make no guarantee of continuous or error-free operation during beta.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Event Content</h2>
+    <h2>5.1 Your Responsibility</h2>
+    <p>If you post an event, you are solely responsible for the accuracy of the information you provide, including the venue address, date, and any flyer image you upload. You represent that you have the right to post the content you upload, including flyer images.</p>
+    <h2>5.2 Geographic Scope</h2>
+    <p>During beta, Bashment only supports event locations within Jamaica and the New York metropolitan area (the five boroughs and Long Island). Events outside these regions cannot currently be created.</p>
+    <h2>5.3 Private Events</h2>
+    <p>The "Private Event" option limits an event's visibility to people who have the direct share link. This is intended to reduce unwanted public exposure, but it is not a guarantee of confidentiality — anyone who receives the link (including through forwarding) can view the event. Bashment is not responsible for how a share link is subsequently distributed by others.</p>
+    <h2>5.4 Content Removal</h2>
+    <p>We reserve the right to remove any event or content that violates these terms, applicable law, or that we determine, in our reasonable judgment, poses a safety risk.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Prohibited Conduct</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Post false, misleading, or fraudulent event information</li>
+      <li>Upload content you don't have the right to share</li>
+      <li>Use the service to harass, threaten, or endanger any person</li>
+      <li>Attempt to access other users' accounts or private events without authorization</li>
+      <li>Use the service in a way that violates applicable law</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>7. AI Flyer Extraction</h2>
+    <p>If you use the flyer upload feature, your flyer image may be processed by a third-party AI service to extract event details. You should review any auto-extracted information for accuracy before publishing your event — Bashment does not guarantee the accuracy of AI-extracted text.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Intellectual Property</h2>
+    <p>You retain ownership of the content you upload (including flyers). By uploading content, you grant Bashment a license to display, store, and distribute that content as necessary to operate the service, including on public event pages and share links.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. Disclaimer of Warranties</h2>
+    <p>Bashment is provided "as is" without warranties of any kind, express or implied, during this beta period.</p>
+  </div>
+
+  <div class="card">
+    <h2>10. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Bashment and its operators are not liable for any indirect, incidental, or consequential damages arising from your use of the service, including but not limited to reliance on event details, directions, or AI-extracted information.</p>
+  </div>
+
+  <div class="card">
+    <h2>11. Termination</h2>
+    <p>We may suspend or terminate your access to Bashment at any time, including for violation of these terms. You may stop using the service and request account deletion at any time.</p>
+  </div>
+
+  <div class="card">
+    <h2>12. Changes to These Terms</h2>
+    <p>We may update these terms as Bashment evolves, particularly with the introduction of paid features. Continued use of the service after changes constitutes acceptance of the updated terms.</p>
+  </div>
+
+  <div class="card">
+    <h2>13. Contact Us</h2>
+    <p>Questions about these terms can be directed to <a href="mailto:info@bashment.app">info@bashment.app</a>.</p>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/">Home</a>
+    <a href="/privacy.html">Privacy Policy</a>
+  </div>
+</div>
+</body>
+</html>
